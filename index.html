@@ -6,99 +6,101 @@
 <title>ISHNTT — Share. Connect.</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-body { background: #000; color: #fff; min-height: 100vh; overflow-x: hidden; }
+body { background: #0a0a0a; color: #fff; min-height: 100vh; }
 
 /* ===== LOGIN SCREEN ===== */
 .login-screen {
-  position: fixed; inset: 0;
-  background: linear-gradient(135deg, #1a2a1a 0%, #0a0a0a 50%, #0a1a0a 100%);
+  position: fixed; inset: 0; z-index: 1000;
   display: flex; justify-content: center; align-items: center;
-  padding: 20px; z-index: 1000;
-  transition: opacity 0.5s, visibility 0.5s;
+  padding: 20px; transition: opacity 0.4s, visibility 0.4s;
 }
 .login-screen.hidden { opacity: 0; visibility: hidden; }
 
 .login-bg {
   position: absolute; inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800');
-  background-size: cover; background-position: center;
-  opacity: 0.4; filter: blur(2px);
+  background: linear-gradient(135deg, #0a1f0a 0%, #0a0a0a 50%, #001a0a 100%);
 }
 .login-bg::after {
   content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,255,170,0.15), rgba(0,0,0,0.6));
+  background: radial-gradient(circle at 30% 20%, rgba(0,255,170,0.15), transparent 50%),
+              radial-gradient(circle at 70% 80%, rgba(0,204,255,0.1), transparent 50%);
 }
 
 .login-box {
   position: relative;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 24px;
-  padding: 40px 32px;
+  padding: 36px 28px;
   width: 100%; max-width: 400px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  animation: slideUp 0.4s ease;
 }
-.login-box h1 {
-  font-size: 32px; font-weight: 800; margin-bottom: 8px;
-  color: #fff;
-}
-.login-box .sub {
-  font-size: 14px; color: rgba(255,255,255,0.7);
-  margin-bottom: 28px; line-height: 1.5;
-}
+@keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-.input-wrap {
-  position: relative; margin-bottom: 16px;
+.login-box h1 { font-size: 30px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+.login-box .sub { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 24px; }
+
+.auth-tabs {
+  display: flex; gap: 8px; margin-bottom: 20px;
+  background: rgba(0,0,0,0.3); padding: 4px; border-radius: 12px;
 }
+.auth-tab {
+  flex: 1; padding: 10px; border: none; background: transparent;
+  color: #888; font-weight: 700; font-size: 14px;
+  cursor: pointer; border-radius: 8px; transition: all 0.2s;
+}
+.auth-tab.active { background: linear-gradient(135deg, #00ffaa, #00cc66); color: #000; }
+
+.input-wrap { position: relative; margin-bottom: 12px; }
 .input-wrap input {
-  width: 100%;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #fff; padding: 14px 44px 14px 18px;
+  width: 100%; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; padding: 14px 44px 14px 16px;
   border-radius: 12px; font-size: 15px; outline: none;
   transition: all 0.3s;
 }
-.input-wrap input:focus {
-  border-color: #00ffaa;
-  background: rgba(0,255,170,0.05);
-}
-.input-wrap input::placeholder { color: rgba(255,255,255,0.5); }
+.input-wrap input:focus { border-color: #00ffaa; background: rgba(0,255,170,0.05); }
+.input-wrap input::placeholder { color: rgba(255,255,255,0.4); }
 .input-wrap .icon {
   position: absolute; right: 14px; top: 50%;
-  transform: translateY(-50%);
-  color: rgba(255,255,255,0.5); font-size: 18px;
-  cursor: pointer;
+  transform: translateY(-50%); color: rgba(255,255,255,0.4);
+  font-size: 18px; cursor: pointer;
 }
 
-.remember {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; color: rgba(255,255,255,0.7);
-  margin-bottom: 20px;
+.error-msg {
+  color: #ff4466; font-size: 12px; margin-bottom: 10px;
+  display: none; padding: 8px 12px;
+  background: rgba(255,68,102,0.1); border-radius: 8px;
+  border: 1px solid rgba(255,68,102,0.2);
 }
-.remember input { width: 16px; height: 16px; accent-color: #00ffaa; cursor: pointer; }
 
 .login-btn {
-  width: 100%;
-  background: linear-gradient(135deg, #00ffaa, #00cc66);
-  color: #000; border: none; padding: 15px;
-  border-radius: 12px; font-size: 16px; font-weight: 800;
-  cursor: pointer; transition: transform 0.1s;
-  margin-bottom: 16px;
+  width: 100%; background: linear-gradient(135deg, #00ffaa, #00cc66);
+  color: #000; border: none; padding: 14px;
+  border-radius: 12px; font-size: 15px; font-weight: 800;
+  cursor: pointer; margin-bottom: 10px; transition: transform 0.1s;
 }
 .login-btn:active { transform: scale(0.98); }
 
-.signup-link {
-  text-align: center; font-size: 13px;
-  color: rgba(255,255,255,0.7);
+.google-btn {
+  width: 100%; background: #fff; color: #000;
+  border: none; padding: 13px; border-radius: 12px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  margin-bottom: 10px; display: flex;
+  align-items: center; justify-content: center; gap: 10px;
 }
-.signup-link span { color: #00ffaa; cursor: pointer; font-weight: 700; }
 
-.credit {
-  text-align: center; font-size: 11px;
-  color: rgba(255,255,255,0.4); margin-top: 24px;
+.skip-btn {
+  width: 100%; background: transparent; color: #888;
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 12px; border-radius: 12px;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
 }
+.skip-btn:hover { color: #fff; border-color: #444; }
 
 /* ===== MAIN APP ===== */
 .app { display: none; }
@@ -121,7 +123,7 @@ header {
   width: 40px; height: 40px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 18px; cursor: pointer; color: #ccc;
-  transition: all 0.2s;
+  position: relative; transition: all 0.2s;
 }
 .icon-header:hover { background: #1f1f1f; color: #00ffaa; }
 .icon-header .badge {
@@ -134,14 +136,27 @@ header {
 
 .container { max-width: 600px; margin: 0 auto; padding: 16px; }
 
-/* Story-like upload */
+.user-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  background: #141414; border: 1px solid #1f1f1f;
+  border-radius: 12px; padding: 10px 14px; margin-bottom: 14px;
+  font-size: 13px;
+}
+.user-bar .badge-name { color: #00ffaa; font-weight: 700; cursor: pointer; }
+.user-bar .limit { color: #ffaa00; font-size: 11px; }
+.user-bar .logout {
+  background: #ff3355; color: #fff; border: none;
+  padding: 6px 12px; border-radius: 16px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+}
+
 .post-box {
   background: #141414; border: 1px solid #1f1f1f;
-  border-radius: 16px; padding: 14px; margin-bottom: 16px;
+  border-radius: 16px; padding: 12px; margin-bottom: 16px;
   display: flex; align-items: center; gap: 12px;
 }
 .post-box .avatar {
-  width: 44px; height: 44px; border-radius: 50%;
+  width: 42px; height: 42px; border-radius: 50%;
   background: linear-gradient(135deg, #00ffaa, #00ccff);
   display: flex; align-items: center; justify-content: center;
   font-weight: 800; color: #000; font-size: 16px;
@@ -151,9 +166,7 @@ header {
   color: #888; padding: 12px 16px; border-radius: 24px;
   font-size: 14px; text-align: left; cursor: pointer;
 }
-.post-box .upload-btn:hover { border-color: #00ffaa; color: #ccc; }
 
-/* Feed */
 .feed { display: flex; flex-direction: column; gap: 16px; }
 
 .post {
@@ -171,33 +184,23 @@ header {
   font-weight: 800; color: #000; font-size: 14px;
 }
 .post-header .info { flex: 1; }
-.post-header .name { font-size: 14px; font-weight: 700; color: #fff; }
+.post-header .name { font-size: 14px; font-weight: 700; }
 .post-header .time { font-size: 11px; color: #666; }
 
-.post-img {
-  width: 100%; aspect-ratio: 1/1; object-fit: cover;
-  background: #1a1a1a; display: block;
-}
+.post-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #1a1a1a; display: block; }
 
-.post-actions {
-  display: flex; gap: 16px; padding: 12px 14px 8px;
-}
+.post-actions { display: flex; gap: 16px; padding: 12px 14px 8px; }
 .post-actions .action {
   background: none; border: none; color: #ccc;
-  font-size: 20px; cursor: pointer; display: flex;
-  align-items: center; gap: 6px;
-  transition: color 0.2s;
+  font-size: 20px; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
 }
-.post-actions .action:hover { color: #00ffaa; }
 .post-actions .action.liked { color: #ff3355; }
 
-.post-caption {
-  padding: 0 14px 14px; font-size: 13px;
-  color: #bbb; line-height: 1.4;
-}
+.post-caption { padding: 0 14px 14px; font-size: 13px; color: #bbb; line-height: 1.4; }
 .post-caption b { color: #00ffaa; }
 
-/* ===== CHAT PANEL ===== */
+/* Chat Panel */
 .chat-panel {
   position: fixed; top: 0; right: -100%;
   width: 100%; max-width: 400px; height: 100vh;
@@ -222,7 +225,6 @@ header {
 .chat-item {
   display: flex; align-items: center; gap: 12px;
   padding: 12px 16px; cursor: pointer;
-  transition: background 0.2s;
 }
 .chat-item:hover { background: #1a1a1a; }
 .chat-item .avatar {
@@ -232,71 +234,10 @@ header {
   font-weight: 800; color: #000; font-size: 18px;
 }
 .chat-item .info { flex: 1; }
-.chat-item .name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.chat-item .name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
 .chat-item .msg { font-size: 13px; color: #888; }
 .chat-item .time { font-size: 11px; color: #555; }
 
-/* ===== MESSAGE VIEW ===== */
-.message-view {
-  position: fixed; inset: 0;
-  background: #0a0a0a; z-index: 300;
-  display: none; flex-direction: column;
-}
-.message-view.open { display: flex; }
-.msg-header {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 16px; border-bottom: 1px solid #1f1f1f;
-  background: #0f0f0f;
-}
-.msg-header .avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg, #00ffaa, #00ccff);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; color: #000; font-size: 16px;
-}
-.msg-header .info { flex: 1; }
-.msg-header .name { font-size: 15px; font-weight: 700; }
-.msg-header .status { font-size: 11px; color: #00ffaa; }
-
-.msg-body {
-  flex: 1; overflow-y: auto; padding: 16px;
-  display: flex; flex-direction: column; gap: 10px;
-  background: #0a0a0a;
-}
-.msg {
-  max-width: 75%; padding: 10px 14px;
-  border-radius: 18px; font-size: 14px;
-  line-height: 1.4; word-break: break-word;
-}
-.msg.received {
-  background: #1c1c1c; color: #fff;
-  align-self: flex-start;
-  border-bottom-left-radius: 4px;
-}
-.msg.sent {
-  background: linear-gradient(135deg, #00ffaa, #00cc66);
-  color: #000; align-self: flex-end;
-  border-bottom-right-radius: 4px;
-  font-weight: 500;
-}
-
-.msg-input {
-  display: flex; gap: 8px; padding: 12px 16px;
-  border-top: 1px solid #1f1f1f; background: #0f0f0f;
-}
-.msg-input input {
-  flex: 1; background: #1c1c1c; border: 1px solid #262626;
-  color: #fff; padding: 12px 16px; border-radius: 24px;
-  font-size: 14px; outline: none;
-}
-.msg-input input:focus { border-color: #00ffaa; }
-.msg-input button {
-  background: #00ffaa; color: #000; border: none;
-  width: 44px; height: 44px; border-radius: 50%;
-  font-size: 18px; cursor: pointer; font-weight: 700;
-}
-
-/* ===== BOTTOM NAV ===== */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0;
   background: rgba(15,15,15,0.95);
@@ -308,15 +249,11 @@ header {
 .nav-item {
   display: flex; flex-direction: column; align-items: center;
   gap: 2px; padding: 6px 16px; cursor: pointer;
-  color: #666; font-size: 10px; transition: color 0.2s;
+  color: #666; font-size: 10px;
   background: none; border: none;
 }
 .nav-item.active { color: #00ffaa; }
 .nav-item .icon { font-size: 22px; }
-
-@media (min-width: 640px) {
-  .chat-panel { max-width: 420px; }
-}
 </style>
 </head>
 <body>
@@ -325,58 +262,68 @@ header {
 <div class="login-screen" id="loginScreen">
   <div class="login-bg"></div>
   <div class="login-box">
-    <h1>Login</h1>
-    <p class="sub">Welcome back! Please login to your account</p>
+    <h1 id="authTitle">Welcome to ISHNTT</h1>
+    <p class="sub" id="authSubtitle">Login karo ya naya account banao</p>
 
-    <div class="input-wrap">
-      <input type="text" id="loginUser" placeholder="User Name">
-      <span class="icon">👤</span>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="loginTab" onclick="setMode(true)">Login</button>
+      <button class="auth-tab" id="signupTab" onclick="setMode(false)">Sign Up</button>
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <div class="input-wrap" id="usernameWrap" style="display:none;">
+      <input type="text" id="usernameInput" placeholder="Username (unique)">
+      <span class="icon">@</span>
     </div>
 
     <div class="input-wrap">
-      <input type="password" id="loginPass" placeholder="Password">
+      <input type="email" id="emailInput" placeholder="Email address">
+      <span class="icon">✉</span>
+    </div>
+
+    <div class="input-wrap">
+      <input type="password" id="passwordInput" placeholder="Password (min 6 chars)">
       <span class="icon" onclick="togglePassword()">👁</span>
     </div>
 
-    <label class="remember">
-      <input type="checkbox"> Remember me
-    </label>
+    <button class="login-btn" id="authBtn" onclick="handleAuth()">Login</button>
 
-    <button class="login-btn" onclick="doLogin()">Login</button>
+    <button class="google-btn" onclick="googleLogin()">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="18" height="18" alt="G">
+      Continue with Google
+    </button>
 
-    <div class="signup-link">
-      Don't have an account? <span onclick="alert('Signup page baad me aayega!')">Signup</span>
-    </div>
-
-    <div class="credit">Created by <b>ISHNTT</b></div>
+    <button class="skip-btn" onclick="skipAuth()">Skip for now →</button>
   </div>
 </div>
 
 <!-- ===== MAIN APP ===== -->
 <div class="app" id="mainApp">
-
   <header>
     <div class="logo">ISHNTT</div>
     <div class="header-actions">
       <div class="icon-header" onclick="openChat()" style="position:relative;">
-        💬
-        <span class="badge">3</span>
+        💬 <span class="badge">3</span>
       </div>
-      <div class="icon-header" onclick="alert('Profile page baad me!')">👤</div>
+      <div class="icon-header" onclick="alert('Profile page jald aa raha hai!')">👤</div>
     </div>
   </header>
 
-  <div class="container" style="padding-bottom: 80px;">
+  <div class="container" style="padding-bottom: 90px;">
 
-    <!-- Upload box -->
-    <div class="post-box">
-      <div class="avatar">Y</div>
-      <button class="upload-btn" onclick="alert('Upload feature baad me!')">What's on your mind? Share a photo...</button>
+    <div class="user-bar">
+      <span>👤 <span class="badge-name" id="userBadge" onclick="handleBadgeClick()">Guest</span></span>
+      <span class="limit" id="limitWarn"></span>
+      <button class="logout" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
     </div>
 
-    <!-- Feed -->
-    <div class="feed" id="feed">
+    <div class="post-box">
+      <div class="avatar" id="postAvatar">G</div>
+      <button class="upload-btn" onclick="handleUploadClick()">What's on your mind? Share a photo...</button>
+    </div>
 
+    <div class="feed" id="feed">
       <div class="post">
         <div class="post-header">
           <div class="avatar">A</div>
@@ -388,14 +335,11 @@ header {
         <img class="post-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600" alt="post">
         <div class="post-actions">
           <button class="action" onclick="toggleLike(this)">🤍</button>
-          <button class="action" onclick="alert('Comments baad me!')">💬</button>
-          <button class="action" onclick="alert('Share baad me!')">📤</button>
+          <button class="action">💬</button>
+          <button class="action">📤</button>
         </div>
-        <div class="post-caption">
-          <b>arjun_99</b> Mountain vibes 🏔️ #travel #nature
-        </div>
+        <div class="post-caption"><b>arjun_99</b> Mountain vibes 🏔️</div>
       </div>
-
       <div class="post">
         <div class="post-header">
           <div class="avatar">P</div>
@@ -407,36 +351,21 @@ header {
         <img class="post-img" src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?w=600" alt="post">
         <div class="post-actions">
           <button class="action" onclick="toggleLike(this)">🤍</button>
-          <button class="action" onclick="alert('Comments baad me!')">💬</button>
-          <button class="action" onclick="alert('Share baad me!')">📤</button>
+          <button class="action">💬</button>
+          <button class="action">📤</button>
         </div>
-        <div class="post-caption">
-          <b>priya_sharma</b> Sunset lovers 🌅
-        </div>
+        <div class="post-caption"><b>priya_sharma</b> Sunset lovers 🌅</div>
       </div>
-
     </div>
   </div>
 
-  <!-- Bottom Nav -->
   <div class="bottom-nav">
-    <button class="nav-item active">
-      <span class="icon">🏠</span> Home
-    </button>
-    <button class="nav-item" onclick="alert('Explore baad me!')">
-      <span class="icon">🔍</span> Explore
-    </button>
-    <button class="nav-item" onclick="alert('Upload baad me!')">
-      <span class="icon">➕</span> Post
-    </button>
-    <button class="nav-item" onclick="openChat()">
-      <span class="icon">💬</span> Chat
-    </button>
-    <button class="nav-item" onclick="alert('Profile baad me!')">
-      <span class="icon">👤</span> Profile
-    </button>
+    <button class="nav-item active"><span class="icon">🏠</span> Home</button>
+    <button class="nav-item" onclick="alert('Explore jald!')"><span class="icon">🔍</span> Explore</button>
+    <button class="nav-item" onclick="handleUploadClick()"><span class="icon">➕</span> Post</button>
+    <button class="nav-item" onclick="openChat()"><span class="icon">💬</span> Chat</button>
+    <button class="nav-item" onclick="alert('Profile jald!')"><span class="icon">👤</span> Profile</button>
   </div>
-
 </div>
 
 <!-- ===== CHAT PANEL ===== -->
@@ -446,7 +375,7 @@ header {
     <h2>Chats</h2>
   </div>
   <div class="chat-list">
-    <div class="chat-item" onclick="openMessage('arjun_99')">
+    <div class="chat-item" onclick="alert('Chat feature jald aa raha hai!')">
       <div class="avatar">A</div>
       <div class="info">
         <div class="name">arjun_99</div>
@@ -454,7 +383,7 @@ header {
       </div>
       <div class="time">2m</div>
     </div>
-    <div class="chat-item" onclick="openMessage('priya_sharma')">
+    <div class="chat-item" onclick="alert('Chat feature jald aa raha hai!')">
       <div class="avatar">P</div>
       <div class="info">
         <div class="name">priya_sharma</div>
@@ -462,104 +391,199 @@ header {
       </div>
       <div class="time">15m</div>
     </div>
-    <div class="chat-item" onclick="openMessage('rohit_raj')">
-      <div class="avatar">R</div>
-      <div class="info">
-        <div class="name">rohit_raj</div>
-        <div class="msg">Kal milte hain</div>
-      </div>
-      <div class="time">1h</div>
-    </div>
   </div>
 </div>
 
-<!-- ===== MESSAGE VIEW ===== -->
-<div class="message-view" id="messageView">
-  <div class="msg-header">
-    <button class="back" onclick="closeMessage()" style="background:#1a1a1a;border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">←</button>
-    <div class="avatar" id="msgAvatar">A</div>
-    <div class="info">
-      <div class="name" id="msgName">arjun_99</div>
-      <div class="status">online</div>
-    </div>
-  </div>
-  <div class="msg-body" id="msgBody">
-    <div class="msg received">Bhai photo kaisi lagi?</div>
-    <div class="msg sent">Bahut mast! 🔥</div>
-    <div class="msg received">Thanks bhai 😄</div>
-  </div>
-  <div class="msg-input">
-    <input type="text" id="msgInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendMsg()">
-    <button onclick="sendMsg()">➤</button>
-  </div>
-</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
-<script>
-// ===== LOGIN =====
-function doLogin() {
-  const user = document.getElementById('loginUser').value.trim();
-  const pass = document.getElementById('loginPass').value;
-  if (!user || !pass) { alert('Username aur password dono daalo!'); return; }
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('mainApp').classList.add('active');
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyCJkg8OOu3szJmBnvbbND6BJYT_9aQVExg",
+  authDomain: "ishntt-f8b74.firebaseapp.com",
+  projectId: "ishntt-f8b74",
+  storageBucket: "ishntt-f8b74.firebasestorage.app",
+  messagingSenderId: "1002308007099",
+  appId: "1:1002308007099:web:ed0f89596a74f522bba59e",
+  measurementId: "G-7L1X880XLS"
+};
 
-function togglePassword() {
-  const input = document.getElementById('loginPass');
-  input.type = input.type === 'password' ? 'text' : 'password';
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const googleProvider = new GoogleAuthProvider();
 
-// ===== CHAT =====
-function openChat() {
-  document.getElementById('chatPanel').classList.add('open');
-}
-function closeChat() {
-  document.getElementById('chatPanel').classList.remove('open');
-}
+const WORKER_URL = "https://ishntbot.ishantgiri2004g.workers.dev";
+const loginScreen = document.getElementById('loginScreen');
+const mainApp = document.getElementById('mainApp');
+const errorMsg = document.getElementById('errorMsg');
+const userBadge = document.getElementById('userBadge');
+const logoutBtn = document.getElementById('logoutBtn');
+const limitWarn = document.getElementById('limitWarn');
+const postAvatar = document.getElementById('postAvatar');
+const usernameWrap = document.getElementById('usernameWrap');
 
-// ===== MESSAGE =====
-let currentChatUser = '';
-function openMessage(name) {
-  currentChatUser = name;
-  document.getElementById('msgName').textContent = name;
-  document.getElementById('msgAvatar').textContent = name[0].toUpperCase();
-  document.getElementById('messageView').classList.add('open');
-  document.getElementById('msgBody').innerHTML = `
-    <div class="msg received">Bhai photo kaisi lagi?</div>
-    <div class="msg sent">Bahut mast! 🔥</div>
-    <div class="msg received">Thanks bhai 😄</div>
-  `;
-}
-function closeMessage() {
-  document.getElementById('messageView').classList.remove('open');
-}
-function sendMsg() {
-  const input = document.getElementById('msgInput');
-  const text = input.value.trim();
-  if (!text) return;
-  const body = document.getElementById('msgBody');
-  const div = document.createElement('div');
-  div.className = 'msg sent';
-  div.textContent = text;
-  body.appendChild(div);
-  input.value = '';
-  body.scrollTop = body.scrollHeight;
+let currentUser = null;
+let isLoginMode = true;
+const GUEST_LIMIT = 10;
 
-  // Auto-reply (demo)
-  setTimeout(() => {
-    const reply = document.createElement('div');
-    reply.className = 'msg received';
-    reply.textContent = 'Ok bhai! 😊';
-    body.appendChild(reply);
-    body.scrollTop = body.scrollHeight;
-  }, 1000);
+function getGuestCount() { return parseInt(localStorage.getItem('ishntt_guest_uploads') || '0'); }
+function incGuestCount() {
+  const c = getGuestCount() + 1;
+  localStorage.setItem('ishntt_guest_uploads', c);
+  updateLimit();
+}
+function updateLimit() {
+  if (currentUser) { limitWarn.textContent = ''; return; }
+  const used = getGuestCount();
+  limitWarn.textContent = used >= GUEST_LIMIT ? '⚠️ Limit khatam' : `${used}/${GUEST_LIMIT}`;
 }
 
-// ===== LIKE =====
-function toggleLike(btn) {
+window.setMode = function(loginMode) {
+  isLoginMode = loginMode;
+  document.getElementById('loginTab').classList.toggle('active', loginMode);
+  document.getElementById('signupTab').classList.toggle('active', !loginMode);
+  document.getElementById('authTitle').textContent = loginMode ? 'Welcome Back' : 'Create Account';
+  document.getElementById('authSubtitle').textContent = loginMode ? 'Login karo apne account me' : 'Naya account banao, free hai';
+  document.getElementById('authBtn').textContent = loginMode ? 'Login' : 'Sign Up';
+  usernameWrap.style.display = loginMode ? 'none' : 'block';
+  errorMsg.style.display = 'none';
+};
+
+window.togglePassword = function() {
+  const i = document.getElementById('passwordInput');
+  i.type = i.type === 'password' ? 'text' : 'password';
+};
+
+function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; }
+
+window.handleAuth = async function() {
+  const email = document.getElementById('emailInput').value.trim();
+  const password = document.getElementById('passwordInput').value;
+  const username = document.getElementById('usernameInput').value.trim().toLowerCase();
+  errorMsg.style.display = 'none';
+
+  if (!email || !password) { showError('Email aur password dono daalo!'); return; }
+  if (password.length < 6) { showError('Password kam se kam 6 characters!'); return; }
+
+  if (!isLoginMode) {
+    if (!username) { showError('Username daalo!'); return; }
+    if (username.length < 3) { showError('Username kam se kam 3 characters!'); return; }
+    if (!/^[a-z0-9_]+$/.test(username)) { showError('Sirf small letters, numbers, _ allowed!'); return; }
+    try {
+      const snap = await getDoc(doc(db, 'usernames', username));
+      if (snap.exists()) { showError('Ye username already le liya gaya hai!'); return; }
+    } catch (e) { showError('Check fail: ' + e.message); return; }
+  }
+
+  try {
+    if (isLoginMode) {
+      await signInWithEmailAndPassword(auth, email, password);
+    } else {
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, 'usernames', username), {
+        uid: cred.user.uid, email: cred.user.email, createdAt: Date.now()
+      });
+      await updateProfile(cred.user, { displayName: username });
+    }
+  } catch (err) {
+    showError(err.message.replace('Firebase: ', ''));
+  }
+};
+
+window.googleLogin = async function() {
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    const baseUsername = (user.displayName || user.email.split('@')[0]).toLowerCase().replace(/[^a-z0-9_]/g, '');
+    const snap = await getDoc(doc(db, 'usernames', baseUsername));
+    if (!snap.exists()) {
+      await setDoc(doc(db, 'usernames', baseUsername), {
+        uid: user.uid, email: user.email, createdAt: Date.now()
+      });
+      if (!user.displayName) await updateProfile(user, { displayName: baseUsername });
+    }
+  } catch (err) { showError(err.message); }
+};
+
+window.skipAuth = function() {
+  loginScreen.classList.add('hidden');
+  mainApp.classList.add('active');
+  userBadge.textContent = 'Guest';
+  updateLimit();
+};
+
+window.logout = async function() { await signOut(auth); };
+
+window.handleBadgeClick = function() {
+  if (!currentUser) {
+    loginScreen.classList.remove('hidden');
+    mainApp.classList.remove('active');
+  } else {
+    changeUsername();
+  }
+};
+
+window.changeUsername = async function() {
+  const newU = prompt('Naya username daalo:', currentUser.name);
+  if (!newU) return;
+  const clean = newU.trim().toLowerCase();
+  if (clean.length < 3) { alert('Kam se kam 3 characters!'); return; }
+  if (!/^[a-z0-9_]+$/.test(clean)) { alert('Sirf small letters, numbers, _ !'); return; }
+  if (clean === currentUser.name) return;
+
+  try {
+    const snap = await getDoc(doc(db, 'usernames', clean));
+    if (snap.exists()) { alert('Ye username already le liya gaya hai!'); return; }
+    await deleteDoc(doc(db, 'usernames', currentUser.name));
+    await setDoc(doc(db, 'usernames', clean), {
+      uid: currentUser.uid, email: currentUser.email, createdAt: Date.now()
+    });
+    await updateProfile(auth.currentUser, { displayName: clean });
+    currentUser.name = clean;
+    userBadge.textContent = clean;
+    postAvatar.textContent = clean[0].toUpperCase();
+    alert('Username change ho gaya! ✅');
+  } catch (e) { alert('Fail: ' + e.message); }
+};
+
+window.handleUploadClick = function() {
+  if (!currentUser && getGuestCount() >= GUEST_LIMIT) {
+    alert('10 uploads ki limit khatam. Login karo!');
+    loginScreen.classList.remove('hidden');
+    mainApp.classList.remove('active');
+    return;
+  }
+  alert('Upload feature integrate karne ke liye ready hai! (Telegram + Cloudflare Worker)');
+};
+
+window.openChat = function() { document.getElementById('chatPanel').classList.add('open'); };
+window.closeChat = function() { document.getElementById('chatPanel').classList.remove('open'); };
+
+window.toggleLike = function(btn) {
   btn.classList.toggle('liked');
   btn.textContent = btn.classList.contains('liked') ? '❤️' : '🤍';
-}
+};
+
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    let name = user.displayName || user.email.split('@')[0];
+    currentUser = { uid: user.uid, email: user.email, name };
+    userBadge.textContent = name;
+    postAvatar.textContent = name[0].toUpperCase();
+    logoutBtn.style.display = 'inline-block';
+    loginScreen.classList.add('hidden');
+    mainApp.classList.add('active');
+    updateLimit();
+  } else {
+    currentUser = null;
+    userBadge.textContent = 'Guest';
+    postAvatar.textContent = 'G';
+    logoutBtn.style.display = 'none';
+    updateLimit();
+  }
+});
 </script>
 
 </body>
