@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ISHNTT — Share. Connect.</title>
+<title>ISHNTTCHAT — Share. Chat. Connect.</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 
+/* Login */
 .login-screen { position: fixed; inset: 0; background: #0f0f0f; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; }
 .login-screen.hidden { display: none; }
 .login-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 380px; }
-.login-box h1 { font-size: 24px; margin-bottom: 6px; }
+.login-box h1 { font-size: 26px; margin-bottom: 6px; letter-spacing: 1px; }
+.login-box h1 span { color: #00ffaa; }
 .login-box p { font-size: 13px; color: #888; margin-bottom: 20px; }
 .login-box input { width: 100%; background: #0f0f0f; border: 1px solid #333; color: #fff; padding: 12px 14px; border-radius: 10px; font-size: 14px; outline: none; margin-bottom: 10px; }
 .login-box input:focus { border-color: #00ffaa; }
@@ -20,8 +22,10 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 .skip-btn { width: 100%; background: transparent; color: #888; border: 1px solid #333; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .error-msg { color: #ff4466; font-size: 12px; margin-bottom: 10px; display: none; padding: 8px; background: rgba(255,68,102,0.1); border-radius: 8px; }
 
+/* Header */
 header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #1f1f1f; position: sticky; top: 0; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); z-index: 50; }
-.logo { font-size: 22px; font-weight: 800; color: #00ffaa; letter-spacing: 1px; }
+.logo { font-size: 20px; font-weight: 800; letter-spacing: 2px; }
+.logo span { color: #00ffaa; }
 .header-actions { display: flex; align-items: center; gap: 8px; }
 .user-badge { background: #1a1a1a; border: 1px solid #2a2a2a; padding: 8px 14px; border-radius: 20px; font-size: 13px; color: #00ffaa; font-weight: 600; cursor: pointer; }
 .user-badge.guest { color: #888; }
@@ -31,6 +35,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .upload-btn { background: #00ffaa; color: #000; padding: 10px 18px; border-radius: 25px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; }
 #fileInput { display: none; }
 
+/* Gallery */
 .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 .empty { text-align: center; padding: 80px 20px; color: #666; }
 .empty h3 { font-size: 18px; color: #888; margin-bottom: 6px; }
@@ -57,6 +62,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .comment-input button { background: #00ffaa; color: #000; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; cursor: pointer; }
 .comment-input input:disabled, .comment-input button:disabled { opacity: 0.4; cursor: not-allowed; }
 
+/* Chat Panel */
 .chat-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100vh; background: #0f0f0f; border-left: 1px solid #1f1f1f; z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
 .chat-panel.open { right: 0; }
 .chat-header { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid #1f1f1f; }
@@ -76,6 +82,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .search-bar input { width: 100%; background: #141414; border: 1px solid #262626; color: #fff; padding: 11px 16px; border-radius: 22px; font-size: 13px; outline: none; }
 .user-result { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #1a1a1a; }
 
+/* Message View */
 .message-view { position: fixed; inset: 0; background: #0a0a0a; z-index: 300; display: none; flex-direction: column; }
 .message-view.active { display: flex; }
 .msg-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #1f1f1f; background: #0f0f0f; }
@@ -92,6 +99,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .msg-input input { flex: 1; background: #1c1c1c; border: 1px solid #262626; color: #fff; padding: 12px 16px; border-radius: 24px; font-size: 14px; outline: none; }
 .msg-input button { background: #00ffaa; color: #000; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: 700; }
 
+/* QR Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 400; display: none; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
 .modal-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; max-height: 90vh; overflow-y: auto; }
@@ -100,7 +108,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 #qrImage { width: 220px; height: 220px; background: #fff; padding: 10px; border-radius: 12px; margin: 0 auto 16px; display: block; }
 #qrReader { width: 100%; border-radius: 12px; margin-bottom: 12px; }
 .modal-btn { width: 100%; background: #00ffaa; color: #000; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 8px; }
-.modal-btn.secondary { background: transparent; color: #888; border: 1px solid #333; }
 
 .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; }
 .backdrop.active { display: block; }
@@ -112,8 +119,8 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
-    <h1>Welcome to ISHNTT</h1>
-    <p>Login karo ya naya account banao</p>
+    <h1>ISHNTT<span>CHAT</span></h1>
+    <p>Share. Chat. Connect.</p>
     <div class="error-msg" id="errorMsg"></div>
     <input type="email" id="emailInput" placeholder="Email address">
     <input type="password" id="passwordInput" placeholder="Password (min 6 chars)">
@@ -128,7 +135,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 </div>
 
 <header>
-  <div class="logo">ISHNTT</div>
+  <div class="logo">ISHNTT<span>CHAT</span></div>
   <div class="header-actions">
     <span class="limit-warn" id="limitWarn" style="color:#ffaa00;font-size:11px;font-weight:600;"></span>
     <span class="user-badge" id="userBadge">👤 Guest</span>
@@ -245,7 +252,6 @@ function updateLimit() {
   limitWarn.textContent = used >= GUEST_LIMIT ? '⚠️ Limit khatam' : `Guest: ${used}/${GUEST_LIMIT}`;
 }
 
-// ===== AUTH =====
 window.handleAuth = async function(isLogin) {
   const email = document.getElementById('emailInput').value.trim();
   const password = document.getElementById('passwordInput').value;
@@ -307,7 +313,6 @@ window.changeUsername = async function() {
 };
 function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; }
 
-// ===== UPLOAD =====
 window.handleUploadClick = function() {
   if (isGuest && getGuestCount() >= GUEST_LIMIT) { alert('Limit khatam! Login karo!'); loginScreen.classList.remove('hidden'); return; }
   fileInput.click();
@@ -331,7 +336,6 @@ fileInput.addEventListener('change', async (e) => {
   finally { document.getElementById('loading').style.display = 'none'; fileInput.value = ''; }
 });
 
-// ===== GALLERY =====
 async function loadAllImages() {
   try {
     const res = await fetch(`${WORKER_URL}/list`);
@@ -398,7 +402,6 @@ window.addComment = async function(id) {
   }
 };
 
-// ===== CHAT PANEL =====
 window.openChat = function() {
   document.getElementById('chatPanel').classList.add('open');
   document.getElementById('backdrop').classList.add('active');
@@ -436,7 +439,6 @@ window.searchUsers = async function(q_) {
   if (found === 0) results.innerHTML = '<div class="empty-chats">Koi user nahi mila</div>';
 };
 
-// ===== START CHAT (Contact system) =====
 window.startChat = async function(otherUid, otherName) {
   if (isGuest) { alert('Chat ke liye login karo!'); return; }
   const chatId = [currentUser.uid, otherUid].sort().join('_');
@@ -444,11 +446,9 @@ window.startChat = async function(otherUid, otherName) {
   document.getElementById('msgName').textContent = otherName;
   document.getElementById('msgAvatar').textContent = otherName[0].toUpperCase();
   document.getElementById('messageView').classList.add('active');
-  
   const chatRef = doc(db, 'chats', chatId);
   const chatSnap = await getDoc(chatRef);
   if (!chatSnap.exists()) {
-    // Naya chat banao - dono ke liye contact ban jayega
     await setDoc(chatRef, {
       users: [currentUser.uid, otherUid],
       usernames: { [currentUser.uid]: currentUser.name, [otherUid]: otherName },
@@ -457,8 +457,6 @@ window.startChat = async function(otherUid, otherName) {
       lastMessageTime: Date.now()
     });
   }
-  
-  // Chat panel band karo, message view kholo
   closeChat();
   loadMessages(chatId);
 };
@@ -520,7 +518,6 @@ window.closeMessage = function() {
   activeChatId = null;
 };
 
-// ===== QR CODE =====
 window.showMyQR = function() {
   if (isGuest || !currentUser) { alert('Login karo QR banane ke liye!'); return; }
   const modal = document.getElementById('qrModal');
@@ -528,19 +525,10 @@ window.showMyQR = function() {
   document.getElementById('qrSubtitle').textContent = 'Ye QR dikhao, dusra scan karke tumse chat kar sakta hai';
   document.getElementById('qrImage').style.display = 'block';
   document.getElementById('qrReader').style.display = 'none';
-  
   const qrData = JSON.stringify({ uid: currentUser.uid, name: currentUser.name });
-  
-  // QR as dataURL (image) - guaranteed to work
   QRCode.toDataURL(qrData, { width: 220, margin: 2, color: { dark: '#000', light: '#fff' } })
-    .then(url => {
-      document.getElementById('qrImage').src = url;
-    })
-    .catch(err => {
-      console.error('QR error:', err);
-      alert('QR generate fail: ' + err.message);
-    });
-  
+    .then(url => { document.getElementById('qrImage').src = url; })
+    .catch(err => { alert('QR generate fail: ' + err.message); });
   modal.classList.add('active');
 };
 
@@ -552,7 +540,6 @@ window.showScanQR = function() {
   document.getElementById('qrImage').style.display = 'none';
   document.getElementById('qrReader').style.display = 'block';
   modal.classList.add('active');
-
   setTimeout(() => {
     if (html5QrCode) { try { html5QrCode.clear(); } catch(e){} }
     html5QrCode = new Html5Qrcode("qrReader");
@@ -568,17 +555,13 @@ window.showScanQR = function() {
             const data = JSON.parse(decodedText);
             if (data.uid && data.name) {
               if (data.uid === currentUser.uid) { alert('Ye tumhara hi QR hai!'); return; }
-              // Scan karte hi chat create ho jayega (contact ban jayega)
               startChat(data.uid, data.name);
             } else alert('Invalid QR!');
           } catch (e) { alert('Invalid QR format!'); }
         }).catch(() => { closeQRModal(); });
       },
-      (errorMessage) => { /* ignore */ }
-    ).catch(err => {
-      alert('Camera error: ' + err + '\n\nCamera permission check karo.');
-      closeQRModal();
-    });
+      (errorMessage) => {}
+    ).catch(err => { alert('Camera error: ' + err); closeQRModal(); });
   }, 300);
 };
 
@@ -591,7 +574,6 @@ window.closeQRModal = function() {
 
 function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text || ''; return d.innerHTML; }
 
-// ===== AUTH STATE =====
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     isGuest = false;
