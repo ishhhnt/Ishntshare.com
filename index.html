@@ -50,7 +50,7 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .gcard:hover { border-color: #00ffaa; }
 .gcard img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
 .gcard .gbody { padding: 8px; }
-.gcard .gname { font-size: 11px; color: #00ffaa; font-weight: 700; margin-bottom: 4px; }
+.gcard .gname { font-size: 11px; color: #00ffaa; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
 .gcard .gcap { font-size: 11px; color: #999; margin-bottom: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .gcard .gtags { font-size: 10px; color: #00ccff; margin-bottom: 6px; }
 .gcard .grow { display: flex; justify-content: space-between; align-items: center; }
@@ -370,6 +370,24 @@ const $ = id => document.getElementById(id);
 const guestCount = () => parseInt(localStorage.getItem('ishntt_gu') || '0');
 const incGuest = () => { localStorage.setItem('ishntt_gu', guestCount() + 1); };
 
+// ===== USER PROFILE CACHE =====
+const userCache = {};
+async function getUserProfile(uid) {
+  if (!uid || uid === 'unknown' || (uid && uid.startsWith('guest_'))) {
+    return { username: 'Guest', profilePic: '' };
+  }
+  if (userCache[uid]) return userCache[uid];
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    if (snap.exists()) {
+      const d = snap.data();
+      userCache[uid] = { username: d.username || 'User', profilePic: d.profilePic || '' };
+      return userCache[uid];
+    }
+  } catch (e) { console.log('getUserProfile error:', e); }
+  return { username: 'User', profilePic: '' };
+}
+
 window.setMode = m => {
   isLoginMode = m;
   $('tabLogin').classList.toggle('on', m);
@@ -472,7 +490,7 @@ async function loadImages() {
   } catch (e) {}
 }
 
-function renderGallery() {
+async function renderGallery() {
   const grid = $('gGrid');
   grid.innerHTML = '';
   let filtered = allImages;
@@ -487,22 +505,29 @@ function renderGallery() {
   }
   if (filtered.length > 0) {
     $('gEmpty').style.display = 'none';
-    filtered.forEach(im => grid.appendChild(makeCard(im)));
+    for (const im of filtered) {
+      const card = await makeCard(im);
+      grid.appendChild(card);
+    }
   } else {
     $('gEmpty').style.display = 'block';
     $('gEmpty').textContent = currentFilter ? 'Koi post nahi mila' : 'Abhi koi post nahi hai';
   }
 }
 
-function makeCard(im) {
+async function makeCard(im) {
   const c = document.createElement('div');
   c.className = 'gcard';
   c.onclick = () => openPostView(im);
   const tagList = (im.tags || '').split(' ').filter(t => t).map(t => t.startsWith('#') ? t : '#' + t).join(' ');
+  const profile = await getUserProfile(im.uid);
+  const picHTML = profile.profilePic
+    ? `<img src="${profile.profilePic}" style="width:18px;height:18px;border-radius:50%;object-fit:cover;flex-shrink:0;">`
+    : `<div style="width:18px;height:18px;border-radius:50%;background:#00ffaa;color:#000;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${(profile.username || 'U')[0].toUpperCase()}</div>`;
   c.innerHTML = `
     <img src="${WORKER_URL}/image/${im.id}" loading="lazy">
     <div class="gbody">
-      <div class="gname">📷 ${esc(im.username || 'Unknown')}</div>
+      <div class="gname">${picHTML}<span>${esc(profile.username || im.username || 'Unknown')}</span></div>
       <div class="gcap">${esc(im.caption || '')}</div>
       ${tagList ? `<div class="gtags">${esc(tagList)}</div>` : ''}
       <div class="grow"><span class="gcnt">💬 ${(im.comments || []).length}</span></div>
@@ -512,11 +537,14 @@ function makeCard(im) {
 
 window.filterBySearch = v => { currentFilter = v.trim(); renderGallery(); };
 
-window.openPostView = im => {
+window.openPostView = async (im) => {
   currentPost = im;
   $('pvImage').src = `${WORKER_URL}/image/${im.id}`;
-  $('pvAvatar').textContent = (im.username || 'U')[0].toUpperCase();
-  $('pvName').textContent = im.username || 'Unknown';
+  const profile = await getUserProfile(im.uid);
+  $('pvAvatar').innerHTML = profile.profilePic
+    ? `<img src="${profile.profilePic}" style="width:100%;height:100%;object-fit:cover;">`
+    : (profile.username || 'U')[0].toUpperCase();
+  $('pvName').textContent = profile.username || im.username || 'Unknown';
   $('pvTime').textContent = im.date ? new Date(im.date).toLocaleString() : 'just now';
   $('pvCaption').textContent = im.caption || '';
   const tagList = (im.tags || '').split(' ').filter(t => t).map(t => t.startsWith('#') ? t : '#' + t).join(' ');
@@ -615,17 +643,24 @@ window.searchUsers = async q => {
   const s = await getDocs(collection(db, 'usernames'));
   res.innerHTML = '';
   let f = 0;
-  s.forEach(d => {
+  for (const d of s.docs) {
     const n = d.id, data = d.data();
     if (n.includes(q.toLowerCase()) && data.uid !== currentUser.uid) {
       f++;
+      const profile = await getUserProfile(data.uid);
       const r = document.createElement('div');
       r.className = 'userrow';
       r.onclick = () => startChat(data.uid, n);
-      r.innerHTML = `<div class="avatar">${n[0].toUpperCase()}</div><div class="uname">${n}</div><div class="uchat">💬 Chat</div>`;
+      r.innerHTML = `
+        <div class="avatar">
+          ${profile.profilePic ? `<img src="${profile.profilePic}" style="width:100%;height:100%;object-fit:cover;">` : n[0].toUpperCase()}
+        </div>
+        <div class="uname">${n}</div>
+        <div class="uchat">💬 Chat</div>
+      `;
       res.appendChild(r);
     }
-  });
+  }
   if (f === 0) res.innerHTML = '<div class="pempty">Koi user nahi mila</div>';
 };
 
@@ -635,18 +670,39 @@ window.startChat = async (uid, name) => {
   activeChatId = cid;
   activeChatUser = { uid, name };
   $('mName').textContent = name;
-  $('mAvatar').textContent = name[0].toUpperCase();
+  
+  const myProfile = await getUserProfile(currentUser.uid);
+  const otherProfile = await getUserProfile(uid);
+  
+  $('mAvatar').innerHTML = otherProfile.profilePic
+    ? `<img src="${otherProfile.profilePic}" style="width:100%;height:100%;object-fit:cover;">`
+    : name[0].toUpperCase();
+  
   $('msgView').classList.add('on');
   const ref = doc(db, 'chats', cid);
   const snap = await getDoc(ref);
+  
   if (!snap.exists()) {
     await setDoc(ref, {
       users: [currentUser.uid, uid],
       usernames: { [currentUser.uid]: currentUser.name, [uid]: name },
-      createdAt: Date.now(), lastMessage: 'Connected!', lastMessageTime: Date.now(),
+      profilePics: {
+        [currentUser.uid]: myProfile.profilePic || '',
+        [uid]: otherProfile.profilePic || ''
+      },
+      createdAt: Date.now(),
+      lastMessage: 'Connected!',
+      lastMessageTime: Date.now(),
       lastSender: 'system'
     });
+  } else {
+    const existing = snap.data();
+    const pics = existing.profilePics || {};
+    pics[currentUser.uid] = myProfile.profilePic || '';
+    pics[uid] = otherProfile.profilePic || '';
+    await setDoc(ref, { profilePics: pics }, { merge: true });
   }
+  
   closeChat();
   knownMsgIds = new Set();
   loadMsgs(cid);
@@ -693,20 +749,21 @@ window.sendMsg = async () => {
   inp.value = '';
   try {
     await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
-      text: t,
-      from: currentUser.uid,
-      fromName: currentUser.name,
-      createdAt: serverTimestamp()
+      text: t, from: currentUser.uid, fromName: currentUser.name, createdAt: serverTimestamp()
     });
-    await setDoc(doc(db, 'chats', activeChatId), {
+    const myProfile = await getUserProfile(currentUser.uid);
+    const chatRef = doc(db, 'chats', activeChatId);
+    const chatSnap = await getDoc(chatRef);
+    const existingPics = chatSnap.exists() ? (chatSnap.data().profilePics || {}) : {};
+    existingPics[currentUser.uid] = myProfile.profilePic || '';
+    await setDoc(chatRef, {
       lastMessage: t,
       lastMessageTime: Date.now(),
       lastSender: currentUser.uid,
-      lastSenderName: currentUser.name
+      lastSenderName: currentUser.name,
+      profilePics: existingPics
     }, { merge: true });
-  } catch (err) {
-    alert('Message fail: ' + err.message);
-  }
+  } catch (err) { alert('Message fail: ' + err.message); }
 };
 
 $('chatImgIn').onchange = async e => {
@@ -723,11 +780,17 @@ $('chatImgIn').onchange = async e => {
       await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
         text: '', imageUrl: `${WORKER_URL}/image/${d.id}`, from: currentUser.uid, fromName: currentUser.name, createdAt: serverTimestamp()
       });
-      await setDoc(doc(db, 'chats', activeChatId), {
+      const myProfile = await getUserProfile(currentUser.uid);
+      const chatRef = doc(db, 'chats', activeChatId);
+      const chatSnap = await getDoc(chatRef);
+      const existingPics = chatSnap.exists() ? (chatSnap.data().profilePics || {}) : {};
+      existingPics[currentUser.uid] = myProfile.profilePic || '';
+      await setDoc(chatRef, {
         lastMessage: '📷 Photo',
         lastMessageTime: Date.now(),
         lastSender: currentUser.uid,
-        lastSenderName: currentUser.name
+        lastSenderName: currentUser.name,
+        profilePics: existingPics
       }, { merge: true });
     }
   } catch (er) { alert('Error: ' + er.message); }
@@ -769,7 +832,7 @@ window.closeMsg = () => {
   activeChatId = null;
 };
 
-// ===== CHAT LIST (UPDATED) =====
+// ===== CHAT LIST =====
 function loadChats() {
   if (unsubChats) unsubChats();
   const list = $('chatsList');
@@ -783,20 +846,21 @@ function loadChats() {
     const arr = [];
     snap.forEach(d => {
       const data = d.data();
-      if (data.users && data.users.includes(currentUser.uid)) {
-        arr.push({ id: d.id, ...data });
-      }
+      if (data.users && data.users.includes(currentUser.uid)) arr.push({ id: d.id, ...data });
     });
     arr.sort((a, b) => (b.lastMessageTime || 0) - (a.lastMessageTime || 0));
     arr.forEach(c => {
       const ou = c.users.find(u => u !== currentUser.uid);
       const on = c.usernames && c.usernames[ou] ? c.usernames[ou] : 'User';
+      const oPic = c.profilePics && c.profilePics[ou] ? c.profilePics[ou] : '';
       const isUnread = c.lastSender && c.lastSender !== currentUser.uid && c.lastSender !== 'system';
       const r = document.createElement('div');
       r.className = 'chatrow';
       r.onclick = () => startChat(ou, on);
       r.innerHTML = `
-        <div class="avatar">${on[0].toUpperCase()}</div>
+        <div class="avatar">
+          ${oPic ? `<img src="${oPic}" style="width:100%;height:100%;object-fit:cover;">` : on[0].toUpperCase()}
+        </div>
         <div class="cinfo">
           <div class="cname">${esc(on)}</div>
           <div class="cmsg" style="${isUnread ? 'color:#00ffaa;font-weight:600;' : ''}">${esc(c.lastMessage || 'Chat shuru karo...')}</div>
@@ -820,16 +884,11 @@ function startNotif() {
       if (ch.type === 'modified') {
         const c = ch.doc.data();
         const chatId = ch.doc.id;
-        if (
-          chatId !== activeChatId &&
-          c.lastSender &&
-          c.lastSender !== currentUser.uid &&
-          c.lastSender !== 'system' &&
-          c.lastMessage
-        ) {
+        if (chatId !== activeChatId && c.lastSender && c.lastSender !== currentUser.uid && c.lastSender !== 'system' && c.lastMessage) {
           const ou = c.users.find(u => u !== currentUser.uid);
           const on = c.usernames && c.usernames[ou] ? c.usernames[ou] : 'User';
-          showToast(on, c.lastMessage);
+          const oPic = c.profilePics && c.profilePics[ou] ? c.profilePics[ou] : '';
+          showToast(on, c.lastMessage, oPic);
           $('chatDot').classList.add('on');
         }
       }
@@ -839,8 +898,10 @@ function startNotif() {
   });
 }
 
-function showToast(name, msg) {
-  $('toastAvatar').textContent = name[0].toUpperCase();
+function showToast(name, msg, pic) {
+  $('toastAvatar').innerHTML = pic
+    ? `<img src="${pic}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+    : name[0].toUpperCase();
   $('toastName').textContent = name;
   $('toastMsg').textContent = msg;
   $('toast').classList.add('on');
@@ -903,6 +964,7 @@ window.changeUsername = async () => {
   await setDoc(doc(db, 'users', currentUser.uid), { username: c }, { merge: true });
   await updateProfile(auth.currentUser, { displayName: c });
   currentUser.name = c;
+  userCache[currentUser.uid] = { username: c, profilePic: userCache[currentUser.uid]?.profilePic || '' };
   $('profileName').textContent = c;
   alert('Done! ✅');
 };
@@ -919,6 +981,7 @@ $('profilePicIn').onchange = async e => {
     if (d.id) {
       const url = `${WORKER_URL}/image/${d.id}`;
       await setDoc(doc(db, 'users', currentUser.uid), { profilePic: url }, { merge: true });
+      userCache[currentUser.uid] = { username: currentUser.name, profilePic: url };
       $('profilePic').innerHTML = `<img src="${url}">`;
       alert('Profile pic updated! ✅');
     }
