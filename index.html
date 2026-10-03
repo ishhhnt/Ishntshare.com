@@ -28,7 +28,6 @@ input.field:focus { border-color: #00ffaa; }
 
 #app { display: none; height: 100vh; flex-direction: column; }
 #app.on { display: flex; }
-
 header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #0a0a0a; border-bottom: 1px solid #1f1f1f; }
 .logo { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
 .logo span { background: linear-gradient(135deg, #00ffaa, #00ccff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -38,20 +37,16 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .iconbtn .dot { position: absolute; top: 4px; right: 4px; width: 9px; height: 9px; border-radius: 50%; background: #ff3355; display: none; }
 .iconbtn .dot.on { display: block; }
 .postbtn { background: #00ffaa; color: #000; border: none; padding: 9px 16px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; }
-.userbtn { background: #1a1a1a; border: none; color: #00ffaa; padding: 8px 12px; border-radius: 18px; font-size: 12px; font-weight: 700; cursor: pointer; }
-.logoutbtn { background: #ff3355; color: #fff; border: none; padding: 8px 12px; border-radius: 18px; font-size: 11px; font-weight: 700; cursor: pointer; display: none; }
 
-/* SEARCH BAR */
 .searchWrap { padding: 12px 16px; background: #0a0a0a; border-bottom: 1px solid #1f1f1f; }
 .searchWrap input { width: 100%; background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 12px 16px; border-radius: 20px; font-size: 13px; outline: none; }
 .searchWrap input:focus { border-color: #00ffaa; }
 
-/* GALLERY */
 #gallery { flex: 1; overflow-y: auto; padding: 12px; }
 .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 @media (min-width: 600px) { .grid { grid-template-columns: repeat(3, 1fr); } }
 @media (min-width: 900px) { .grid { grid-template-columns: repeat(4, 1fr); } }
-.gcard { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; overflow: hidden; cursor: pointer; transition: all 0.2s; }
+.gcard { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; overflow: hidden; cursor: pointer; }
 .gcard:hover { border-color: #00ffaa; }
 .gcard img { width: 100%; aspect-ratio: 1/1; object-fit: cover; display: block; }
 .gcard .gbody { padding: 8px; }
@@ -62,7 +57,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .gcard .gcnt { font-size: 10px; color: #666; }
 .empty { text-align: center; padding: 60px 20px; color: #555; font-size: 14px; line-height: 1.6; }
 
-/* CHAT PANEL */
 #chatPanel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 400px; height: 100vh; background: #0a0a0a; border-left: 1px solid #1f1f1f; z-index: 200; display: flex; flex-direction: column; transition: right 0.3s ease; }
 #chatPanel.on { right: 0; }
 .phead { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #1f1f1f; }
@@ -87,7 +81,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .userrow .uchat { color: #00ffaa; font-size: 11px; font-weight: 700; }
 .pempty { text-align: center; padding: 40px 20px; color: #555; font-size: 12px; line-height: 1.7; }
 
-/* MSG VIEW */
 #msgView { position: fixed; inset: 0; background: #0a0a0a; z-index: 300; display: none; flex-direction: column; }
 #msgView.on { display: flex; }
 .mhead { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-bottom: 1px solid #1f1f1f; }
@@ -111,7 +104,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .mbottom input:focus { border-color: #00ffaa; }
 .mbottom .send { background: #00ffaa; color: #000; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 15px; font-weight: 700; cursor: pointer; }
 
-/* MSG MENU (Bottom Sheet) */
 #msgMenu { position: fixed; left: 50%; bottom: -100%; transform: translateX(-50%); width: calc(100% - 24px); max-width: 400px; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px 20px 0 0; padding: 8px; z-index: 500; transition: bottom 0.3s ease; }
 #msgMenu.on { bottom: 0; }
 #msgMenu .handle { width: 40px; height: 4px; background: #333; border-radius: 4px; margin: 4px auto 12px; }
@@ -119,18 +111,15 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 #msgMenu button.d { color: #ff5577; }
 #msgMenu button .ic { font-size: 18px; width: 24px; text-align: center; }
 
-/* BACKDROP */
 #backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; }
 #backdrop.on { display: block; }
 
-/* TOAST */
 #toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #1a1a1a; border: 1px solid #00ffaa; padding: 12px 16px; border-radius: 14px; z-index: 600; display: flex; gap: 10px; align-items: center; max-width: calc(100% - 32px); min-width: 280px; transition: transform 0.4s ease; }
 #toast.on { transform: translateX(-50%) translateY(0); }
 #toast .tinfo { flex: 1; min-width: 0; }
 #toast .tname { font-size: 12px; color: #00ffaa; font-weight: 700; margin-bottom: 2px; }
 #toast .tmsg { font-size: 12px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-/* MODAL (Post Upload) */
 .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 700; display: none; align-items: center; justify-content: center; padding: 20px; }
 .modal.on { display: flex; }
 .modal-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 20px; padding: 24px; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto; }
@@ -139,7 +128,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .modal-box textarea:focus, .modal-box input:focus { border-color: #00ffaa; }
 .modal-box .preview { width: 100%; max-height: 200px; object-fit: contain; border-radius: 12px; margin-bottom: 10px; }
 
-/* POST VIEW MODAL */
 #postView { position: fixed; inset: 0; background: #0a0a0a; z-index: 800; display: none; flex-direction: column; overflow-y: auto; }
 #postView.on { display: flex; }
 .post-header { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid #1f1f1f; position: sticky; top: 0; background: #0a0a0a; z-index: 10; }
@@ -161,7 +149,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 .post-comment-input input { flex: 1; background: #1a1a1a; border: 1px solid #2a2a2a; color: #fff; padding: 11px 14px; border-radius: 22px; font-size: 13px; outline: none; }
 .post-comment-input button { background: #00ffaa; color: #000; border: none; padding: 11px 18px; border-radius: 22px; font-size: 13px; font-weight: 700; cursor: pointer; }
 
-/* PROFILE MODAL */
 #profileView { position: fixed; inset: 0; background: #0a0a0a; z-index: 800; display: none; flex-direction: column; overflow-y: auto; }
 #profileView.on { display: flex; }
 .profile-header { padding: 20px 16px; border-bottom: 1px solid #1f1f1f; position: sticky; top: 0; background: #0a0a0a; z-index: 10; display: flex; align-items: center; gap: 12px; }
@@ -187,7 +174,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-box">
     <h1>ISHNTT<span>CHAT</span></h1>
@@ -209,7 +195,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   </div>
 </div>
 
-<!-- APP -->
 <div id="app">
   <header>
     <div class="logo">ISHNTT<span>CHAT</span></div>
@@ -231,7 +216,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   <input type="file" id="profilePicIn" accept="image/*" style="display:none;">
 </div>
 
-<!-- UPLOAD MODAL -->
 <div class="modal" id="uploadModal">
   <div class="modal-box">
     <h3>New Post</h3>
@@ -243,7 +227,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   </div>
 </div>
 
-<!-- CHAT PANEL -->
 <div id="backdrop" onclick="handleBackdrop()"></div>
 <div id="chatPanel">
   <div class="phead">
@@ -265,7 +248,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   </div>
 </div>
 
-<!-- MSG VIEW -->
 <div id="msgView">
   <div class="mhead">
     <button class="pback" onclick="closeMsg()">←</button>
@@ -283,14 +265,12 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   </div>
 </div>
 
-<!-- MSG MENU -->
 <div id="msgMenu">
   <div class="handle"></div>
   <button id="editOpt" onclick="editMsg()"><span class="ic">✏️</span> Edit Message</button>
   <button class="d" onclick="deleteMsg()"><span class="ic">🗑</span> Delete Message</button>
 </div>
 
-<!-- POST VIEW -->
 <div id="postView">
   <div class="post-header">
     <button class="pback" onclick="closePostView()">←</button>
@@ -320,7 +300,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   </div>
 </div>
 
-<!-- PROFILE VIEW -->
 <div id="profileView">
   <div class="profile-header">
     <button class="pback" onclick="closeProfile()">←</button>
@@ -348,7 +327,6 @@ header { display: flex; align-items: center; justify-content: space-between; pad
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast">
   <div class="avatar" id="toastAvatar">U</div>
   <div class="tinfo">
@@ -385,13 +363,13 @@ let currentPost = null;
 let allImages = [];
 let currentFilter = '';
 let pendingFile = null;
+let knownMsgIds = new Set();
 const GUEST_LIMIT = 10;
 
 const $ = id => document.getElementById(id);
 const guestCount = () => parseInt(localStorage.getItem('ishntt_gu') || '0');
 const incGuest = () => { localStorage.setItem('ishntt_gu', guestCount() + 1); };
 
-// ===== AUTH =====
 window.setMode = m => {
   isLoginMode = m;
   $('tabLogin').classList.toggle('on', m);
@@ -450,7 +428,6 @@ window.doLogout = async () => { await signOut(auth); isGuest = false; };
 
 function showErr(m) { $('err').textContent = m; $('err').style.display = 'block'; }
 
-// ===== IMAGE UPLOAD =====
 window.pickImage = () => {
   if (isGuest && guestCount() >= GUEST_LIMIT) { alert('Limit khatam! Login karo!'); $('loginScreen').classList.remove('hide'); return; }
   $('fileIn').click();
@@ -472,14 +449,12 @@ window.submitPost = async () => {
   const caption = $('uploadCaption').value.trim();
   const tags = $('uploadTags').value.trim();
   if (isGuest && guestCount() >= GUEST_LIMIT) return alert('Limit khatam!');
-  
   const fd = new FormData();
   fd.append('file', pendingFile);
   fd.append('username', currentUser && !isGuest ? currentUser.name : 'Guest');
   fd.append('uid', currentUser && !isGuest ? currentUser.uid : 'guest_' + Date.now());
   fd.append('caption', caption);
   fd.append('tags', tags);
-  
   try {
     const r = await fetch(`${WORKER_URL}/upload`, { method: 'POST', body: fd });
     const d = await r.json();
@@ -488,7 +463,6 @@ window.submitPost = async () => {
   } catch (er) { alert('Error: ' + er.message); }
 };
 
-// ===== GALLERY =====
 async function loadImages() {
   try {
     const r = await fetch(`${WORKER_URL}/list`);
@@ -523,7 +497,6 @@ function renderGallery() {
 function makeCard(im) {
   const c = document.createElement('div');
   c.className = 'gcard';
-  c.id = 'gc_' + im.id;
   c.onclick = () => openPostView(im);
   const tagList = (im.tags || '').split(' ').filter(t => t).map(t => t.startsWith('#') ? t : '#' + t).join(' ');
   c.innerHTML = `
@@ -537,12 +510,8 @@ function makeCard(im) {
   return c;
 }
 
-window.filterBySearch = v => {
-  currentFilter = v.trim();
-  renderGallery();
-};
+window.filterBySearch = v => { currentFilter = v.trim(); renderGallery(); };
 
-// ===== POST VIEW =====
 window.openPostView = im => {
   currentPost = im;
   $('pvImage').src = `${WORKER_URL}/image/${im.id}`;
@@ -553,13 +522,10 @@ window.openPostView = im => {
   const tagList = (im.tags || '').split(' ').filter(t => t).map(t => t.startsWith('#') ? t : '#' + t).join(' ');
   $('pvTags').textContent = tagList;
   $('pvCommentCount').textContent = (im.comments || []).length;
-  const cmts = $('pvComments');
-  cmts.innerHTML = (im.comments || []).map(c => `<div class="post-comment"><b>${esc(c.username || 'Anon')}:</b> ${esc(c.text)}</div>`).join('');
-  
+  $('pvComments').innerHTML = (im.comments || []).map(c => `<div class="post-comment"><b>${esc(c.username || 'Anon')}:</b> ${esc(c.text)}</div>`).join('');
   const isOwn = currentUser && !isGuest && im.uid === currentUser.uid;
   $('pvEditBtn').style.display = isOwn ? 'flex' : 'none';
   $('pvDelBtn').style.display = isOwn ? 'flex' : 'none';
-  
   $('postView').classList.add('on');
 };
 
@@ -677,10 +643,12 @@ window.startChat = async (uid, name) => {
     await setDoc(ref, {
       users: [currentUser.uid, uid],
       usernames: { [currentUser.uid]: currentUser.name, [uid]: name },
-      createdAt: Date.now(), lastMessage: 'Connected!', lastMessageTime: Date.now()
+      createdAt: Date.now(), lastMessage: 'Connected!', lastMessageTime: Date.now(),
+      lastSender: 'system'
     });
   }
   closeChat();
+  knownMsgIds = new Set();
   loadMsgs(cid);
 };
 
@@ -707,7 +675,7 @@ function loadMsgs(cid) {
       div.className = 'msg ' + (me ? 'me' : 'you');
       const time = m.createdAt ? new Date(m.createdAt.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
       let h = '';
-      if (m.imageUrl) h += `<img src="${m.imageUrl}" onclick="event.stopPropagation();showImg('${m.imageUrl}')">`;
+      if (m.imageUrl) h += `<img src="${m.imageUrl}" onclick="event.stopPropagation();window.open('${m.imageUrl}','_blank')">`;
       if (m.text) h += `<span>${esc(m.text)}</span>`;
       h += `<span class="mtime">${m.edited ? '<span class="medit">edited</span>' : ''}${time}</span>`;
       div.innerHTML = h;
@@ -723,10 +691,22 @@ window.sendMsg = async () => {
   const inp = $('msgIn'), t = inp.value.trim();
   if (!t || !activeChatId) return;
   inp.value = '';
-  await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
-    text: t, from: currentUser.uid, fromName: currentUser.name, createdAt: serverTimestamp()
-  });
-  await setDoc(doc(db, 'chats', activeChatId), { lastMessage: t, lastMessageTime: Date.now(), lastSender: currentUser.uid }, { merge: true });
+  try {
+    await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
+      text: t,
+      from: currentUser.uid,
+      fromName: currentUser.name,
+      createdAt: serverTimestamp()
+    });
+    await setDoc(doc(db, 'chats', activeChatId), {
+      lastMessage: t,
+      lastMessageTime: Date.now(),
+      lastSender: currentUser.uid,
+      lastSenderName: currentUser.name
+    }, { merge: true });
+  } catch (err) {
+    alert('Message fail: ' + err.message);
+  }
 };
 
 $('chatImgIn').onchange = async e => {
@@ -743,14 +723,18 @@ $('chatImgIn').onchange = async e => {
       await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
         text: '', imageUrl: `${WORKER_URL}/image/${d.id}`, from: currentUser.uid, fromName: currentUser.name, createdAt: serverTimestamp()
       });
-      await setDoc(doc(db, 'chats', activeChatId), { lastMessage: '📷 Photo', lastMessageTime: Date.now(), lastSender: currentUser.uid }, { merge: true });
+      await setDoc(doc(db, 'chats', activeChatId), {
+        lastMessage: '📷 Photo',
+        lastMessageTime: Date.now(),
+        lastSender: currentUser.uid,
+        lastSenderName: currentUser.name
+      }, { merge: true });
     }
   } catch (er) { alert('Error: ' + er.message); }
   inp.placeholder = 'Message...'; inp.disabled = false;
   $('chatImgIn').value = '';
 };
 
-// ===== MSG MENU =====
 function openMsgMenu(mid, txt) {
   selectedMsgId = mid; selectedMsgText = txt;
   $('msgMenu').classList.add('on');
@@ -785,66 +769,123 @@ window.closeMsg = () => {
   activeChatId = null;
 };
 
-// ===== IMG VIEWER (simple) =====
-window.showImg = u => { window.open(u, '_blank'); };
-
-// ===== CHAT LIST =====
+// ===== CHAT LIST (UPDATED) =====
 function loadChats() {
   if (unsubChats) unsubChats();
   const list = $('chatsList');
   const q = query(collection(db, 'chats'), where('users', 'array-contains', currentUser.uid));
   unsubChats = onSnapshot(q, snap => {
     list.innerHTML = '';
-    if (snap.empty) { list.innerHTML = '<div class="pempty">Abhi koi chat nahi.<br>Search se dhoondo!</div>'; return; }
+    if (snap.empty) {
+      list.innerHTML = '<div class="pempty">Abhi koi chat nahi.<br>Search se kisi ko dhoondo!</div>';
+      return;
+    }
     const arr = [];
-    snap.forEach(d => { const data = d.data(); if (data.users && data.users.includes(currentUser.uid)) arr.push({ id: d.id, ...data }); });
+    snap.forEach(d => {
+      const data = d.data();
+      if (data.users && data.users.includes(currentUser.uid)) {
+        arr.push({ id: d.id, ...data });
+      }
+    });
     arr.sort((a, b) => (b.lastMessageTime || 0) - (a.lastMessageTime || 0));
     arr.forEach(c => {
       const ou = c.users.find(u => u !== currentUser.uid);
       const on = c.usernames && c.usernames[ou] ? c.usernames[ou] : 'User';
+      const isUnread = c.lastSender && c.lastSender !== currentUser.uid && c.lastSender !== 'system';
       const r = document.createElement('div');
       r.className = 'chatrow';
       r.onclick = () => startChat(ou, on);
-      r.innerHTML = `<div class="avatar">${on[0].toUpperCase()}</div><div class="cinfo"><div class="cname">${esc(on)}</div><div class="cmsg">${esc(c.lastMessage || 'Chat shuru karo...')}</div></div>`;
+      r.innerHTML = `
+        <div class="avatar">${on[0].toUpperCase()}</div>
+        <div class="cinfo">
+          <div class="cname">${esc(on)}</div>
+          <div class="cmsg" style="${isUnread ? 'color:#00ffaa;font-weight:600;' : ''}">${esc(c.lastMessage || 'Chat shuru karo...')}</div>
+        </div>
+        ${isUnread ? '<div style="width:8px;height:8px;background:#00ffaa;border-radius:50%;flex-shrink:0;"></div>' : ''}
+      `;
       list.appendChild(r);
     });
+  }, error => {
+    console.error('Chat list error:', error);
+    list.innerHTML = '<div class="pempty">Error: ' + error.message + '</div>';
   });
 }
+
+// ===== NOTIFICATION =====
+function startNotif() {
+  if (unsubNotif) unsubNotif();
+  const q = query(collection(db, 'chats'), where('users', 'array-contains', currentUser.uid));
+  unsubNotif = onSnapshot(q, snap => {
+    snap.docChanges().forEach(ch => {
+      if (ch.type === 'modified') {
+        const c = ch.doc.data();
+        const chatId = ch.doc.id;
+        if (
+          chatId !== activeChatId &&
+          c.lastSender &&
+          c.lastSender !== currentUser.uid &&
+          c.lastSender !== 'system' &&
+          c.lastMessage
+        ) {
+          const ou = c.users.find(u => u !== currentUser.uid);
+          const on = c.usernames && c.usernames[ou] ? c.usernames[ou] : 'User';
+          showToast(on, c.lastMessage);
+          $('chatDot').classList.add('on');
+        }
+      }
+    });
+  }, error => {
+    console.error('Notification listener error:', error);
+  });
+}
+
+function showToast(name, msg) {
+  $('toastAvatar').textContent = name[0].toUpperCase();
+  $('toastName').textContent = name;
+  $('toastMsg').textContent = msg;
+  $('toast').classList.add('on');
+  setTimeout(() => $('toast').classList.remove('on'), 3500);
+}
+
+function esc(t) { const d = document.createElement('div'); d.textContent = t || ''; return d.innerHTML; }
 
 // ===== PROFILE =====
 window.openProfile = async () => {
   if (!currentUser || isGuest) { $('loginScreen').classList.remove('hide'); return; }
-  $('profileName').textContent = currentUser.name;
-  $('profileEmail').textContent = currentUser.email;
-  $('profilePicText').textContent = currentUser.name[0].toUpperCase();
-  
-  // Profile pic load
-  const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-  if (userDoc.exists() && userDoc.data().profilePic) {
-    $('profilePic').innerHTML = `<img src="${userDoc.data().profilePic}">`;
-  } else {
+  try {
+    $('profileName').textContent = currentUser.name;
+    $('profileEmail').textContent = currentUser.email || '';
     $('profilePic').innerHTML = `<span id="profilePicText">${currentUser.name[0].toUpperCase()}</span>`;
+    try {
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      if (userDoc.exists() && userDoc.data().profilePic) {
+        $('profilePic').innerHTML = `<img src="${userDoc.data().profilePic}">`;
+      }
+    } catch (e) { console.log('Profile pic error:', e); }
+    const myPosts = allImages.filter(im => im.uid === currentUser.uid);
+    $('statPosts').textContent = myPosts.length;
+    try {
+      const cq = query(collection(db, 'chats'), where('users', 'array-contains', currentUser.uid));
+      const cs = await getDocs(cq);
+      $('statChats').textContent = cs.size;
+    } catch (e) { $('statChats').textContent = '0'; }
+    const grid = $('profileGrid');
+    grid.innerHTML = '';
+    if (myPosts.length === 0) {
+      grid.innerHTML = '<div style="color:#666;font-size:12px;text-align:center;padding:20px;grid-column:1/-1;">Abhi koi post nahi</div>';
+    } else {
+      myPosts.forEach(im => {
+        const img = document.createElement('img');
+        img.src = `${WORKER_URL}/image/${im.id}`;
+        img.onclick = () => { closeProfile(); openPostView(im); };
+        grid.appendChild(img);
+      });
+    }
+    $('profileView').classList.add('on');
+  } catch (err) {
+    console.error('Profile error:', err);
+    alert('Profile load fail: ' + err.message);
   }
-  
-  // User ki posts
-  const myPosts = allImages.filter(im => im.uid === currentUser.uid);
-  $('statPosts').textContent = myPosts.length;
-  
-  // Chats count
-  const cq = query(collection(db, 'chats'), where('users', 'array-contains', currentUser.uid));
-  const cs = await getDocs(cq);
-  $('statChats').textContent = cs.size;
-  
-  const grid = $('profileGrid');
-  grid.innerHTML = '';
-  myPosts.forEach(im => {
-    const img = document.createElement('img');
-    img.src = `${WORKER_URL}/image/${im.id}`;
-    img.onclick = () => { closeProfile(); openPostView(im); };
-    grid.appendChild(img);
-  });
-  
-  $('profileView').classList.add('on');
 };
 
 window.closeProfile = () => $('profileView').classList.remove('on');
@@ -866,9 +907,7 @@ window.changeUsername = async () => {
   alert('Done! ✅');
 };
 
-window.changeProfilePic = () => {
-  $('profilePicIn').click();
-};
+window.changeProfilePic = () => $('profilePicIn').click();
 
 $('profilePicIn').onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
@@ -886,35 +925,6 @@ $('profilePicIn').onchange = async e => {
   } catch (er) { alert('Error: ' + er.message); }
   $('profilePicIn').value = '';
 };
-
-// ===== NOTIFICATIONS =====
-function startNotif() {
-  if (unsubNotif) unsubNotif();
-  const q = query(collection(db, 'chats'), where('users', 'array-contains', currentUser.uid));
-  unsubNotif = onSnapshot(q, snap => {
-    snap.docChanges().forEach(ch => {
-      if (ch.type === 'modified') {
-        const c = ch.doc.data();
-        if (ch.doc.id !== activeChatId && c.lastSender && c.lastSender !== currentUser.uid) {
-          const ou = c.users.find(u => u !== currentUser.uid);
-          const on = c.usernames ? c.usernames[ou] : 'User';
-          showToast(on, c.lastMessage);
-          $('chatDot').classList.add('on');
-        }
-      }
-    });
-  });
-}
-
-function showToast(name, msg) {
-  $('toastAvatar').textContent = name[0].toUpperCase();
-  $('toastName').textContent = name;
-  $('toastMsg').textContent = msg;
-  $('toast').classList.add('on');
-  setTimeout(() => $('toast').classList.remove('on'), 3500);
-}
-
-function esc(t) { const d = document.createElement('div'); d.textContent = t || ''; return d.innerHTML; }
 
 // ===== AUTH STATE =====
 onAuthStateChanged(auth, async u => {
