@@ -8,7 +8,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 
-/* ===== LOGIN ===== */
 .login-screen { position: fixed; inset: 0; background: #0f0f0f; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
 .login-screen.hidden { display: none; }
 .login-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 380px; }
@@ -21,9 +20,7 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 .google-btn { width: 100%; background: #fff; color: #000; border: none; padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 .skip-btn { width: 100%; background: transparent; color: #888; border: 1px solid #333; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .error-msg { color: #ff4466; font-size: 12px; margin-bottom: 10px; display: none; padding: 8px; background: rgba(255,68,102,0.1); border-radius: 8px; }
-.success-msg { color: #00ffaa; font-size: 12px; margin-bottom: 10px; display: none; padding: 8px; background: rgba(0,255,170,0.1); border-radius: 8px; }
 
-/* ===== HEADER ===== */
 header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #1f1f1f; position: sticky; top: 0; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); z-index: 50; }
 .logo { font-size: 20px; font-weight: 800; letter-spacing: 2px; }
 .logo span { color: #00ffaa; }
@@ -35,8 +32,8 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .icon-btn-header:hover { color: #00ffaa; }
 .upload-btn { background: #00ffaa; color: #000; padding: 10px 18px; border-radius: 25px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; }
 #fileInput { display: none; }
+#chatImageInput { display: none; }
 
-/* ===== GALLERY ===== */
 .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
 .empty { text-align: center; padding: 80px 20px; color: #666; }
 .empty h3 { font-size: 18px; color: #888; margin-bottom: 6px; }
@@ -63,7 +60,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .comment-input button { background: #00ffaa; color: #000; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; cursor: pointer; }
 .comment-input input:disabled, .comment-input button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ===== CHAT PANEL ===== */
 .chat-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100vh; background: #0f0f0f; border-left: 1px solid #1f1f1f; z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
 .chat-panel.open { right: 0; }
 .chat-header { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid #1f1f1f; }
@@ -88,7 +84,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .user-result .name { font-size: 15px; font-weight: 700; }
 .user-result .action { color: #00ffaa; font-size: 12px; font-weight: 700; }
 
-/* ===== MESSAGE VIEW ===== */
 .message-view { position: fixed; inset: 0; background: #0a0a0a; z-index: 300; display: none; flex-direction: column; }
 .message-view.active { display: flex; }
 .msg-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #1f1f1f; background: #0f0f0f; }
@@ -97,31 +92,44 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .msg-header .name { font-size: 15px; font-weight: 700; }
 .msg-header .status { font-size: 11px; color: #00ffaa; }
 .msg-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
-.msg { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-break: break-word; }
+.msg { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; word-break: break-word; position: relative; cursor: pointer; }
 .msg.sent { background: linear-gradient(135deg, #00ffaa, #00cc66); color: #000; align-self: flex-end; border-bottom-right-radius: 4px; }
 .msg.received { background: #1c1c1c; color: #fff; align-self: flex-start; border-bottom-left-radius: 4px; }
 .msg .time { font-size: 10px; opacity: 0.6; margin-top: 4px; display: block; text-align: right; }
-.msg-input { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #1f1f1f; background: #0f0f0f; }
+.msg .msg-text { display: block; }
+.msg img { max-width: 100%; border-radius: 12px; margin-bottom: 4px; display: block; cursor: pointer; }
+.msg-input { display: flex; gap: 8px; padding: 12px 16px; border-top: 1px solid #1f1f1f; background: #0f0f0f; align-items: center; }
+.msg-input .img-btn { background: #1a1a1a; border: 1px solid #2a2a2a; color: #00ffaa; width: 44px; height: 44px; border-radius: 50%; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .msg-input input { flex: 1; background: #1c1c1c; border: 1px solid #262626; color: #fff; padding: 12px 16px; border-radius: 24px; font-size: 14px; outline: none; }
-.msg-input button { background: #00ffaa; color: #000; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: 700; }
+.msg-input button.send { background: #00ffaa; color: #000; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: 700; flex-shrink: 0; }
 
 .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; }
 .backdrop.active { display: block; }
+
+/* Message Context Menu */
+.msg-menu { position: fixed; background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 8px 0; z-index: 400; display: none; min-width: 140px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.msg-menu.active { display: block; }
+.msg-menu button { width: 100%; background: transparent; border: none; color: #fff; padding: 10px 16px; text-align: left; font-size: 14px; cursor: pointer; }
+.msg-menu button:hover { background: #252525; }
+.msg-menu button.danger { color: #ff5577; }
+
+/* Image viewer */
+.img-viewer { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500; display: none; justify-content: center; align-items: center; padding: 20px; }
+.img-viewer.active { display: flex; }
+.img-viewer img { max-width: 100%; max-height: 100%; border-radius: 12px; }
+.img-viewer .close { position: absolute; top: 20px; right: 20px; background: #1a1a1a; border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; }
 
 @media (max-width: 640px) { .chat-panel { max-width: 100%; } }
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <h1>ISHNTT<span>CHAT</span></h1>
     <p>Share. Chat. Connect.</p>
     <div class="error-msg" id="errorMsg"></div>
-    <div class="success-msg" id="successMsg"></div>
 
-    <!-- Mode Tabs -->
     <div style="display:flex;gap:4px;margin-bottom:16px;background:#0f0f0f;padding:4px;border-radius:10px;">
       <button id="loginTabBtn" onclick="setMode(true)" style="flex:1;padding:9px;border:none;background:#00ffaa;color:#000;font-weight:700;font-size:13px;border-radius:7px;cursor:pointer;">Login</button>
       <button id="signupTabBtn" onclick="setMode(false)" style="flex:1;padding:9px;border:none;background:transparent;color:#888;font-weight:700;font-size:13px;border-radius:7px;cursor:pointer;">Sign Up</button>
@@ -142,7 +150,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="logo">ISHNTT<span>CHAT</span></div>
   <div class="header-actions">
@@ -153,9 +160,9 @@ header { display: flex; justify-content: space-between; align-items: center; pad
     <button class="upload-btn" onclick="handleUploadClick()">+ Post</button>
   </div>
   <input type="file" id="fileInput" accept="image/*">
+  <input type="file" id="chatImageInput" accept="image/*">
 </header>
 
-<!-- GALLERY -->
 <div class="container">
   <div id="loading" style="display:none;text-align:center;padding:20px;color:#00ffaa;">⏳ Uploading...</div>
   <div id="emptyMsg" class="empty">
@@ -165,7 +172,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   <div class="gallery" id="gallery"></div>
 </div>
 
-<!-- CHAT PANEL -->
 <div class="backdrop" id="backdrop" onclick="closeChat()"></div>
 <div class="chat-panel" id="chatPanel">
   <div class="chat-header">
@@ -187,7 +193,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   </div>
 </div>
 
-<!-- MESSAGE VIEW -->
 <div class="message-view" id="messageView">
   <div class="msg-header">
     <button class="back" onclick="closeMessage()">←</button>
@@ -199,15 +204,25 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   </div>
   <div class="msg-body" id="msgBody"></div>
   <div class="msg-input">
+    <button class="img-btn" onclick="document.getElementById('chatImageInput').click()">📎</button>
     <input type="text" id="msgInput" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendMessage()">
-    <button onclick="sendMessage()">➤</button>
+    <button class="send" onclick="sendMessage()">➤</button>
   </div>
+</div>
+
+<div class="msg-menu" id="msgMenu">
+  <button onclick="deleteSelectedMessage()" class="danger">🗑 Delete Message</button>
+</div>
+
+<div class="img-viewer" id="imgViewer" onclick="closeImageViewer()">
+  <button class="close" onclick="closeImageViewer()">✕</button>
+  <img id="imgViewerImg" src="" alt="Image" onclick="event.stopPropagation()">
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp, getDocs, limit } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCJkg8OOu3szJmBnvbbND6BJYT_9aQVExg",
@@ -225,13 +240,13 @@ const googleProvider = new GoogleAuthProvider();
 
 const WORKER_URL = "https://ishntbot.ishantgiri2004g.workers.dev";
 const fileInput = document.getElementById('fileInput');
+const chatImageInput = document.getElementById('chatImageInput');
 const gallery = document.getElementById('gallery');
 const emptyMsg = document.getElementById('emptyMsg');
 const loginScreen = document.getElementById('loginScreen');
 const userBadge = document.getElementById('userBadge');
 const logoutBtn = document.getElementById('logoutBtn');
 const errorMsg = document.getElementById('errorMsg');
-const successMsg = document.getElementById('successMsg');
 const limitWarn = document.getElementById('limitWarn');
 const usernameInput = document.getElementById('usernameInput');
 
@@ -241,6 +256,8 @@ let isLoginMode = true;
 let activeChatId = null;
 let unsubscribeMessages = null;
 let unsubscribeChats = null;
+let selectedMsgId = null;
+let selectedMsgIsMine = false;
 const GUEST_LIMIT = 10;
 
 function getGuestCount() { return parseInt(localStorage.getItem('ishntt_guest_uploads') || '0'); }
@@ -251,7 +268,6 @@ function updateLimit() {
   limitWarn.textContent = used >= GUEST_LIMIT ? '⚠️ Limit khatam' : `Guest: ${used}/${GUEST_LIMIT}`;
 }
 
-// ===== AUTH =====
 window.setMode = function(loginMode) {
   isLoginMode = loginMode;
   document.getElementById('loginTabBtn').style.background = loginMode ? '#00ffaa' : 'transparent';
@@ -261,7 +277,6 @@ window.setMode = function(loginMode) {
   document.getElementById('authBtn').textContent = loginMode ? 'Login' : 'Sign Up';
   usernameInput.style.display = loginMode ? 'none' : 'block';
   errorMsg.style.display = 'none';
-  successMsg.style.display = 'none';
 };
 
 window.handleAuth = async function() {
@@ -269,11 +284,8 @@ window.handleAuth = async function() {
   const password = document.getElementById('passwordInput').value;
   const username = usernameInput.value.trim().toLowerCase();
   errorMsg.style.display = 'none';
-  successMsg.style.display = 'none';
-
   if (!email || !password) { showError('Email aur password dono daalo!'); return; }
   if (password.length < 6) { showError('Password kam se kam 6 characters!'); return; }
-
   if (!isLoginMode) {
     if (!username) { showError('Username daalo!'); return; }
     if (username.length < 3) { showError('Username kam se kam 3 characters!'); return; }
@@ -283,15 +295,12 @@ window.handleAuth = async function() {
       if (snap.exists()) { showError('Ye username already le liya gaya hai!'); return; }
     } catch (e) { showError('Check fail: ' + e.message); return; }
   }
-
   try {
     if (isLoginMode) {
       await signInWithEmailAndPassword(auth, email, password);
     } else {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-      await setDoc(doc(db, 'usernames', username), {
-        uid: cred.user.uid, email: cred.user.email, createdAt: Date.now()
-      });
+      await setDoc(doc(db, 'usernames', username), { uid: cred.user.uid, email: cred.user.email, createdAt: Date.now() });
       await updateProfile(cred.user, { displayName: username });
     }
   } catch (err) { showError(err.message.replace('Firebase: ', '')); }
@@ -301,11 +310,9 @@ window.googleLogin = async function() {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
-    // Google user ka username auto-generate
     let baseUsername = (user.displayName || user.email.split('@')[0]).toLowerCase().replace(/[^a-z0-9_]/g, '');
     let snap = await getDoc(doc(db, 'usernames', baseUsername));
     if (snap.exists() && snap.data().uid !== user.uid) {
-      // Username taken, unique banao
       baseUsername = baseUsername + '_' + Math.floor(Math.random() * 9999);
       snap = await getDoc(doc(db, 'usernames', baseUsername));
     }
@@ -313,7 +320,6 @@ window.googleLogin = async function() {
       await setDoc(doc(db, 'usernames', baseUsername), { uid: user.uid, email: user.email, createdAt: Date.now() });
       await updateProfile(user, { displayName: baseUsername });
     } else if (snap.data().uid === user.uid) {
-      // Already exists, uska display name set karo
       await updateProfile(user, { displayName: baseUsername });
     }
   } catch (err) { showError(err.message); }
@@ -330,12 +336,7 @@ window.skipLogin = function() {
 };
 
 window.logout = async function() { await signOut(auth); isGuest = false; };
-
-window.handleBadgeClick = function() {
-  if (isGuest || !currentUser) loginScreen.classList.remove('hidden');
-  else changeUsername();
-};
-
+window.handleBadgeClick = function() { if (isGuest || !currentUser) loginScreen.classList.remove('hidden'); else changeUsername(); };
 window.changeUsername = async function() {
   const newU = prompt('Naya username:', currentUser.name);
   if (!newU) return;
@@ -352,10 +353,8 @@ window.changeUsername = async function() {
     alert('Username change! ✅');
   } catch (e) { alert('Fail: ' + e.message); }
 };
-
 function showError(msg) { errorMsg.textContent = msg; errorMsg.style.display = 'block'; }
 
-// ===== UPLOAD =====
 window.handleUploadClick = function() {
   if (isGuest && getGuestCount() >= GUEST_LIMIT) { alert('Limit khatam! Login karo!'); loginScreen.classList.remove('hidden'); return; }
   fileInput.click();
@@ -379,7 +378,6 @@ fileInput.addEventListener('change', async (e) => {
   finally { document.getElementById('loading').style.display = 'none'; fileInput.value = ''; }
 });
 
-// ===== GALLERY =====
 async function loadAllImages() {
   try {
     const res = await fetch(`${WORKER_URL}/list`);
@@ -446,7 +444,6 @@ window.addComment = async function(id) {
   }
 };
 
-// ===== CHAT =====
 window.openChat = function() {
   document.getElementById('chatPanel').classList.add('open');
   document.getElementById('backdrop').classList.add('active');
@@ -468,7 +465,6 @@ window.searchUsers = async function(q_) {
   const results = document.getElementById('searchResults');
   if (q_.length < 2) { results.innerHTML = '<div class="empty-chats">Kam se kam 2 letters daalo...</div>'; return; }
   if (isGuest || !currentUser) { results.innerHTML = '<div class="empty-chats">User search ke liye login karo!</div>'; return; }
-
   results.innerHTML = '<div class="empty-chats">Searching...</div>';
   try {
     const snap = await getDocs(collection(db, 'usernames'));
@@ -506,6 +502,12 @@ window.startChat = async function(otherUid, otherName) {
       lastMessage: 'Chat connected!',
       lastMessageTime: Date.now()
     });
+  } else {
+    const data = chatSnap.data();
+    const newUsernames = data.usernames || {};
+    if (!newUsernames[currentUser.uid]) newUsernames[currentUser.uid] = currentUser.name;
+    if (!newUsernames[otherUid]) newUsernames[otherUid] = otherName;
+    await setDoc(chatRef, { usernames: newUsernames }, { merge: true });
   }
   closeChat();
   loadMessages(chatId);
@@ -521,11 +523,35 @@ function loadMessages(chatId) {
     if (snapshot.empty) { msgBody.innerHTML = '<div style="text-align:center;color:#555;padding:20px;">Abhi koi message nahi. Pehla message bhejo!</div>'; return; }
     snapshot.forEach(d => {
       const msg = d.data();
+      const msgId = d.id;
       const isMe = msg.from === currentUser.uid;
       const div = document.createElement('div');
       div.className = 'msg ' + (isMe ? 'sent' : 'received');
+      div.dataset.msgId = msgId;
+      div.dataset.isMine = isMe;
       const time = msg.createdAt ? new Date(msg.createdAt.toDate()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-      div.innerHTML = `${escapeHtml(msg.text)}<span class="time">${time}</span>`;
+      
+      let innerHTML = '';
+      if (msg.imageUrl) {
+        innerHTML += `<img src="${msg.imageUrl}" onclick="event.stopPropagation(); openImageViewer('${msg.imageUrl}')" alt="shared">`;
+      }
+      if (msg.text) {
+        innerHTML += `<span class="msg-text">${escapeHtml(msg.text)}</span>`;
+      }
+      innerHTML += `<span class="time">${time}</span>`;
+      div.innerHTML = innerHTML;
+      
+      // Long press / right-click for menu
+      if (isMe) {
+        div.addEventListener('contextmenu', (e) => { e.preventDefault(); showMsgMenu(e, msgId, true); });
+        let touchTimer;
+        div.addEventListener('touchstart', (e) => {
+          touchTimer = setTimeout(() => { showMsgMenu(e, msgId, true); }, 600);
+        });
+        div.addEventListener('touchend', () => clearTimeout(touchTimer));
+        div.addEventListener('touchmove', () => clearTimeout(touchTimer));
+      }
+      
       msgBody.appendChild(div);
     });
     msgBody.scrollTop = msgBody.scrollHeight;
@@ -538,8 +564,98 @@ window.sendMessage = async function() {
   const text = input.value.trim();
   if (!text || !activeChatId) return;
   input.value = '';
-  await addDoc(collection(db, 'chats', activeChatId, 'messages'), { text, from: currentUser.uid, fromName: currentUser.name, createdAt: serverTimestamp() });
-  await setDoc(doc(db, 'chats', activeChatId), { lastMessage: text, lastMessageTime: Date.now() }, { merge: true });
+  try {
+    await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
+      text: text,
+      from: currentUser.uid,
+      fromName: currentUser.name,
+      createdAt: serverTimestamp()
+    });
+    await setDoc(doc(db, 'chats', activeChatId), {
+      lastMessage: text,
+      lastMessageTime: Date.now()
+    }, { merge: true });
+  } catch (err) { alert('Message fail: ' + err.message); }
+};
+
+// Chat image upload
+chatImageInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file || !activeChatId) return;
+  if (isGuest) { alert('Login karo!'); return; }
+  
+  const input = document.getElementById('msgInput');
+  input.placeholder = 'Uploading image...';
+  input.disabled = true;
+  
+  try {
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('username', currentUser.name);
+    fd.append('uid', currentUser.uid);
+    
+    const res = await fetch(`${WORKER_URL}/upload`, { method: 'POST', body: fd });
+    const data = await res.json();
+    
+    if (data.id) {
+      const imageUrl = `${WORKER_URL}/image/${data.id}`;
+      await addDoc(collection(db, 'chats', activeChatId, 'messages'), {
+        text: '',
+        imageUrl: imageUrl,
+        from: currentUser.uid,
+        fromName: currentUser.name,
+        createdAt: serverTimestamp()
+      });
+      await setDoc(doc(db, 'chats', activeChatId), {
+        lastMessage: '📷 Photo',
+        lastMessageTime: Date.now()
+      }, { merge: true });
+    } else {
+      alert('Image upload fail');
+    }
+  } catch (err) { alert('Error: ' + err.message); }
+  finally {
+    input.placeholder = 'Type a message...';
+    input.disabled = false;
+    chatImageInput.value = '';
+  }
+});
+
+// Message menu
+function showMsgMenu(e, msgId, isMine) {
+  selectedMsgId = msgId;
+  selectedMsgIsMine = isMine;
+  const menu = document.getElementById('msgMenu');
+  const x = e.clientX || (e.touches && e.touches[0].clientX) || 200;
+  const y = e.clientY || (e.touches && e.touches[0].clientY) || 200;
+  menu.style.left = Math.min(x, window.innerWidth - 160) + 'px';
+  menu.style.top = Math.min(y, window.innerHeight - 80) + 'px';
+  menu.classList.add('active');
+}
+
+window.deleteSelectedMessage = async function() {
+  if (!selectedMsgId || !activeChatId) return;
+  if (!confirm('Message delete kar dein?')) { document.getElementById('msgMenu').classList.remove('active'); return; }
+  try {
+    await deleteDoc(doc(db, 'chats', activeChatId, 'messages', selectedMsgId));
+    document.getElementById('msgMenu').classList.remove('active');
+    selectedMsgId = null;
+  } catch (err) { alert('Delete fail: ' + err.message); }
+};
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.msg-menu')) {
+    document.getElementById('msgMenu').classList.remove('active');
+  }
+});
+
+// Image viewer
+window.openImageViewer = function(url) {
+  document.getElementById('imgViewerImg').src = url;
+  document.getElementById('imgViewer').classList.add('active');
+};
+window.closeImageViewer = function() {
+  document.getElementById('imgViewer').classList.remove('active');
 };
 
 function loadChats() {
@@ -550,11 +666,16 @@ function loadChats() {
     chatsList.innerHTML = '';
     if (snapshot.empty) { chatsList.innerHTML = '<div class="empty-chats">Abhi koi chat nahi.<br>Search tab se kisi ko dhoondo!</div>'; return; }
     const chats = [];
-    snapshot.forEach(d => chats.push({ id: d.id, ...d.data() }));
+    snapshot.forEach(d => {
+      const data = d.data();
+      if (data.users && data.users.includes(currentUser.uid)) {
+        chats.push({ id: d.id, ...data });
+      }
+    });
     chats.sort((a, b) => (b.lastMessageTime || 0) - (a.lastMessageTime || 0));
     chats.forEach(chat => {
       const otherUid = chat.users.find(u => u !== currentUser.uid);
-      const otherName = chat.usernames ? chat.usernames[otherUid] : 'User';
+      const otherName = chat.usernames && chat.usernames[otherUid] ? chat.usernames[otherUid] : 'User';
       const div = document.createElement('div');
       div.className = 'chat-item';
       div.onclick = () => startChat(otherUid, otherName);
@@ -562,6 +683,9 @@ function loadChats() {
       div.innerHTML = `<div class="avatar">${otherName[0].toUpperCase()}</div><div class="info"><div class="name">${escapeHtml(otherName)}</div><div class="msg">${escapeHtml(chat.lastMessage || 'Chat shuru karo...')}</div></div><div class="time">${time}</div>`;
       chatsList.appendChild(div);
     });
+  }, (error) => {
+    console.error('Chat list error:', error);
+    chatsList.innerHTML = '<div class="empty-chats">Chat load fail: ' + error.message + '</div>';
   });
 }
 
@@ -573,12 +697,10 @@ window.closeMessage = function() {
 
 function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text || ''; return d.innerHTML; }
 
-// ===== AUTH STATE =====
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     isGuest = false;
     let name = user.displayName;
-    // Agar displayName nahi hai (rare case), Firestore se dhoondo
     if (!name) {
       const snap = await getDocs(collection(db, 'usernames'));
       snap.forEach(d => { if (d.data().uid === user.uid) name = d.id; });
