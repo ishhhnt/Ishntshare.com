@@ -8,7 +8,6 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 
-/* Login */
 .login-screen { position: fixed; inset: 0; background: #0f0f0f; z-index: 1000; display: flex; justify-content: center; align-items: center; padding: 20px; }
 .login-screen.hidden { display: none; }
 .login-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 28px 24px; width: 100%; max-width: 380px; }
@@ -21,7 +20,6 @@ body { background: #0f0f0f; color: #fff; min-height: 100vh; }
 .skip-btn { width: 100%; background: transparent; color: #888; border: 1px solid #333; padding: 11px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .error-msg { color: #ff4466; font-size: 12px; margin-bottom: 10px; display: none; padding: 8px; background: rgba(255,68,102,0.1); border-radius: 8px; }
 
-/* Header */
 header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid #1f1f1f; position: sticky; top: 0; background: rgba(15,15,15,0.95); backdrop-filter: blur(10px); z-index: 50; }
 .logo { font-size: 22px; font-weight: 800; color: #00ffaa; letter-spacing: 1px; }
 .header-actions { display: flex; align-items: center; gap: 8px; }
@@ -33,9 +31,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .upload-btn { background: #00ffaa; color: #000; padding: 10px 18px; border-radius: 25px; font-weight: 700; cursor: pointer; border: none; font-size: 14px; }
 #fileInput { display: none; }
 
-/* Main */
 .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
-.limit-warn { color: #ffaa00; font-size: 11px; font-weight: 600; }
 .empty { text-align: center; padding: 80px 20px; color: #666; }
 .empty h3 { font-size: 18px; color: #888; margin-bottom: 6px; }
 .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -61,7 +57,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .comment-input button { background: #00ffaa; color: #000; border: none; padding: 6px 12px; border-radius: 15px; font-size: 11px; font-weight: 700; cursor: pointer; }
 .comment-input input:disabled, .comment-input button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* Chat Panel */
 .chat-panel { position: fixed; top: 0; right: -100%; width: 100%; max-width: 420px; height: 100vh; background: #0f0f0f; border-left: 1px solid #1f1f1f; z-index: 200; transition: right 0.3s ease; display: flex; flex-direction: column; }
 .chat-panel.open { right: 0; }
 .chat-header { display: flex; align-items: center; gap: 12px; padding: 16px; border-bottom: 1px solid #1f1f1f; }
@@ -81,7 +76,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .search-bar input { width: 100%; background: #141414; border: 1px solid #262626; color: #fff; padding: 11px 16px; border-radius: 22px; font-size: 13px; outline: none; }
 .user-result { display: flex; align-items: center; gap: 12px; padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #1a1a1a; }
 
-/* Message View */
 .message-view { position: fixed; inset: 0; background: #0a0a0a; z-index: 300; display: none; flex-direction: column; }
 .message-view.active { display: flex; }
 .msg-header { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #1f1f1f; background: #0f0f0f; }
@@ -98,18 +92,16 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 .msg-input input { flex: 1; background: #1c1c1c; border: 1px solid #262626; color: #fff; padding: 12px 16px; border-radius: 24px; font-size: 14px; outline: none; }
 .msg-input button { background: #00ffaa; color: #000; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 18px; cursor: pointer; font-weight: 700; }
 
-/* QR Modal */
 .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 400; display: none; justify-content: center; align-items: center; padding: 20px; }
 .modal-overlay.active { display: flex; }
-.modal-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; }
+.modal-box { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 16px; padding: 24px; width: 100%; max-width: 360px; text-align: center; max-height: 90vh; overflow-y: auto; }
 .modal-box h3 { font-size: 18px; margin-bottom: 8px; }
 .modal-box p { font-size: 13px; color: #888; margin-bottom: 16px; }
-#qrCanvas { background: #fff; padding: 12px; border-radius: 12px; display: inline-block; margin-bottom: 16px; }
+#qrImage { width: 220px; height: 220px; background: #fff; padding: 10px; border-radius: 12px; margin: 0 auto 16px; display: block; }
 #qrReader { width: 100%; border-radius: 12px; margin-bottom: 12px; }
 .modal-btn { width: 100%; background: #00ffaa; color: #000; border: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; margin-bottom: 8px; }
 .modal-btn.secondary { background: transparent; color: #888; border: 1px solid #333; }
 
-/* Backdrop */
 .backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; display: none; }
 .backdrop.active { display: block; }
 
@@ -118,7 +110,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
 </head>
 <body>
 
-<!-- LOGIN -->
 <div class="login-screen" id="loginScreen">
   <div class="login-box">
     <h1>Welcome to ISHNTT</h1>
@@ -136,14 +127,13 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   </div>
 </div>
 
-<!-- HEADER -->
 <header>
   <div class="logo">ISHNTT</div>
   <div class="header-actions">
-    <span class="limit-warn" id="limitWarn"></span>
+    <span class="limit-warn" id="limitWarn" style="color:#ffaa00;font-size:11px;font-weight:600;"></span>
     <span class="user-badge" id="userBadge">👤 Guest</span>
     <button class="logout-btn" id="logoutBtn" style="display:none;" onclick="logout()">Logout</button>
-    <button class="icon-btn-header" onclick="showMyQR()" title="My QR Code">📱</button>
+    <button class="icon-btn-header" onclick="showMyQR()" title="My QR">📱</button>
     <button class="icon-btn-header" onclick="showScanQR()" title="Scan QR">📷</button>
     <button class="icon-btn-header" onclick="openChat()" style="position:relative;">💬</button>
     <button class="upload-btn" onclick="handleUploadClick()">+ Post</button>
@@ -151,7 +141,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   <input type="file" id="fileInput" accept="image/*">
 </header>
 
-<!-- MAIN FEED -->
 <div class="container">
   <div id="loading" style="display:none;text-align:center;padding:20px;color:#00ffaa;">⏳ Uploading...</div>
   <div id="emptyMsg" class="empty">
@@ -161,7 +150,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   <div class="gallery" id="gallery"></div>
 </div>
 
-<!-- CHAT PANEL -->
 <div class="backdrop" id="backdrop" onclick="closeChat()"></div>
 <div class="chat-panel" id="chatPanel">
   <div class="chat-header">
@@ -173,7 +161,7 @@ header { display: flex; justify-content: space-between; align-items: center; pad
     <div class="chat-tab" onclick="switchChatTab('search')">🔍 Search</div>
   </div>
   <div class="chat-list" id="chatsList">
-    <div class="empty-chats" id="emptyChats">Abhi koi chat nahi hai.</div>
+    <div class="empty-chats" id="emptyChats">Abhi koi chat nahi.<br>QR scan karke ya search karke connect karo!</div>
   </div>
   <div class="chat-list" id="searchList" style="display:none;">
     <div class="search-bar">
@@ -183,7 +171,6 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   </div>
 </div>
 
-<!-- MESSAGE VIEW -->
 <div class="message-view" id="messageView">
   <div class="msg-header">
     <button class="back" onclick="closeMessage()">←</button>
@@ -200,18 +187,16 @@ header { display: flex; justify-content: space-between; align-items: center; pad
   </div>
 </div>
 
-<!-- QR MODAL -->
 <div class="modal-overlay" id="qrModal">
   <div class="modal-box">
     <h3 id="qrTitle">My QR Code</h3>
     <p id="qrSubtitle">Ye QR dikhao, dusra scan karke tumse chat kar sakta hai</p>
-    <div id="qrCanvas"></div>
+    <img id="qrImage" style="display:none;" alt="QR Code">
     <div id="qrReader" style="display:none;"></div>
     <button class="modal-btn" onclick="closeQRModal()">Close</button>
   </div>
 </div>
 
-<!-- QR Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 
@@ -450,6 +435,8 @@ window.searchUsers = async function(q_) {
   });
   if (found === 0) results.innerHTML = '<div class="empty-chats">Koi user nahi mila</div>';
 };
+
+// ===== START CHAT (Contact system) =====
 window.startChat = async function(otherUid, otherName) {
   if (isGuest) { alert('Chat ke liye login karo!'); return; }
   const chatId = [currentUser.uid, otherUid].sort().join('_');
@@ -457,17 +444,25 @@ window.startChat = async function(otherUid, otherName) {
   document.getElementById('msgName').textContent = otherName;
   document.getElementById('msgAvatar').textContent = otherName[0].toUpperCase();
   document.getElementById('messageView').classList.add('active');
+  
   const chatRef = doc(db, 'chats', chatId);
   const chatSnap = await getDoc(chatRef);
   if (!chatSnap.exists()) {
+    // Naya chat banao - dono ke liye contact ban jayega
     await setDoc(chatRef, {
       users: [currentUser.uid, otherUid],
       usernames: { [currentUser.uid]: currentUser.name, [otherUid]: otherName },
-      createdAt: Date.now(), lastMessage: '', lastMessageTime: Date.now()
+      createdAt: Date.now(),
+      lastMessage: 'Chat connected!',
+      lastMessageTime: Date.now()
     });
   }
+  
+  // Chat panel band karo, message view kholo
+  closeChat();
   loadMessages(chatId);
 };
+
 function loadMessages(chatId) {
   if (unsubscribeMessages) unsubscribeMessages();
   const msgBody = document.getElementById('msgBody');
@@ -475,7 +470,7 @@ function loadMessages(chatId) {
   const q = query(collection(db, 'chats', chatId, 'messages'), orderBy('createdAt', 'asc'), limit(200));
   unsubscribeMessages = onSnapshot(q, (snapshot) => {
     msgBody.innerHTML = '';
-    if (snapshot.empty) { msgBody.innerHTML = '<div style="text-align:center;color:#555;padding:20px;">Abhi koi message nahi.</div>'; return; }
+    if (snapshot.empty) { msgBody.innerHTML = '<div style="text-align:center;color:#555;padding:20px;">Abhi koi message nahi. Pehla message bhejo!</div>'; return; }
     snapshot.forEach(d => {
       const msg = d.data();
       const isMe = msg.from === currentUser.uid;
@@ -503,7 +498,7 @@ function loadChats() {
   const q = query(collection(db, 'chats'), where('users', 'array-contains', currentUser.uid));
   unsubscribeChats = onSnapshot(q, (snapshot) => {
     chatsList.innerHTML = '';
-    if (snapshot.empty) { chatsList.innerHTML = '<div class="empty-chats">Abhi koi chat nahi.</div>'; return; }
+    if (snapshot.empty) { chatsList.innerHTML = '<div class="empty-chats">Abhi koi chat nahi.<br>QR scan karke ya search karke connect karo!</div>'; return; }
     const chats = [];
     snapshot.forEach(d => chats.push({ id: d.id, ...d.data() }));
     chats.sort((a, b) => (b.lastMessageTime || 0) - (a.lastMessageTime || 0));
@@ -531,19 +526,20 @@ window.showMyQR = function() {
   const modal = document.getElementById('qrModal');
   document.getElementById('qrTitle').textContent = 'Mera QR Code';
   document.getElementById('qrSubtitle').textContent = 'Ye QR dikhao, dusra scan karke tumse chat kar sakta hai';
-  document.getElementById('qrCanvas').style.display = 'inline-block';
+  document.getElementById('qrImage').style.display = 'block';
   document.getElementById('qrReader').style.display = 'none';
   
-  // QR data: uid + username JSON
   const qrData = JSON.stringify({ uid: currentUser.uid, name: currentUser.name });
   
-  // QR generate karo
-  const canvas = document.createElement('canvas');
-  QRCode.toCanvas(canvas, qrData, { width: 220, margin: 2 }, function(error) {
-    if (error) { console.error(error); return; }
-    document.getElementById('qrCanvas').innerHTML = '';
-    document.getElementById('qrCanvas').appendChild(canvas);
-  });
+  // QR as dataURL (image) - guaranteed to work
+  QRCode.toDataURL(qrData, { width: 220, margin: 2, color: { dark: '#000', light: '#fff' } })
+    .then(url => {
+      document.getElementById('qrImage').src = url;
+    })
+    .catch(err => {
+      console.error('QR error:', err);
+      alert('QR generate fail: ' + err.message);
+    });
   
   modal.classList.add('active');
 };
@@ -553,29 +549,36 @@ window.showScanQR = function() {
   const modal = document.getElementById('qrModal');
   document.getElementById('qrTitle').textContent = 'QR Scan Karo';
   document.getElementById('qrSubtitle').textContent = 'Camera ko QR ke aage rakho';
-  document.getElementById('qrCanvas').style.display = 'none';
+  document.getElementById('qrImage').style.display = 'none';
   document.getElementById('qrReader').style.display = 'block';
   modal.classList.add('active');
 
   setTimeout(() => {
+    if (html5QrCode) { try { html5QrCode.clear(); } catch(e){} }
     html5QrCode = new Html5Qrcode("qrReader");
     html5QrCode.start(
       { facingMode: "environment" },
       { fps: 10, qrbox: 250 },
       (decodedText) => {
         html5QrCode.stop().then(() => {
+          html5QrCode.clear();
+          html5QrCode = null;
           closeQRModal();
           try {
             const data = JSON.parse(decodedText);
             if (data.uid && data.name) {
               if (data.uid === currentUser.uid) { alert('Ye tumhara hi QR hai!'); return; }
+              // Scan karte hi chat create ho jayega (contact ban jayega)
               startChat(data.uid, data.name);
             } else alert('Invalid QR!');
           } catch (e) { alert('Invalid QR format!'); }
-        });
+        }).catch(() => { closeQRModal(); });
       },
-      (errorMessage) => { /* ignore errors */ }
-    ).catch(err => alert('Camera error: ' + err));
+      (errorMessage) => { /* ignore */ }
+    ).catch(err => {
+      alert('Camera error: ' + err + '\n\nCamera permission check karo.');
+      closeQRModal();
+    });
   }, 300);
 };
 
