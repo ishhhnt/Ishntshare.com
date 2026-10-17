@@ -33,11 +33,30 @@ $("aSkip").onclick=()=>{let g=localStorage.getItem("guestId");if(!g){g="g_"+Math
 $("aForgot").onclick=()=>dlg("Reset password",`<input class="in" id="fe" type="email" placeholder="Your account email" value="${esc($("aMail").value.trim())}">`,"Send link",async o=>{const e=o.querySelector("#fe").value.trim();if(!e){say("Enter your email.");return false}await sendPasswordResetEmail(auth,e);mailSent("reset")});
 function mailSent(k){const v=k=="verify";dlg(v?"📧 Verification email sent!":"📧 Password reset email sent!",`<div>From: <b>noreply@ishntt-f8b74.firebaseapp.com</b></div><div>Check your Inbox and your <b>Spam</b> folder.</div><div style="color:var(--m)">${v?"After tapping the link, press “I’ve verified” in the banner or refresh the page.":"Open the link, set a new password, then log in."}</div>`,"Got it",()=>{})}
 const canAct=()=>{if(guest||me?.verified)return true;say("Verify your email first. Use Resend in the banner.");return false};
-onAuthStateChanged(auth,u=>{if(signing)return;if(u)init(u);else if(!guest){ready=false;$("auth").classList.remove("hide");$("app").classList.add("hide")}});
+onAuthStateChanged(auth,u=>{if(signing)return;if(u)init(u);else if(!guest){ready=false;syncHeaderLogo();$("auth").classList.remove("hide");$("app").classList.add("hide")}});
 async function init(u){guest=false;try{await u.reload()}catch{}let p=await getUserProfile(u.uid,true);
  if(!p){await new Promise(res=>{const d=dlg("Choose a username",`<input class="in" id="nn" placeholder="username" autocapitalize="none"><div id="ne" style="color:var(--rd);font-size:13px"></div>`,"Save",async o=>{const n=o.querySelector("#nn").value.trim().toLowerCase();if(!okName(n)){o.querySelector("#ne").textContent="3-20 characters: a-z, 0-9, _ .";return false}if(!(await nameFree(n))){o.querySelector("#ne").textContent="That username is taken.";return false}await makeProfile(u,n,u.photoURL);res()});d.onclick=null;d.querySelector("[data-x]").remove()});p=await getUserProfile(u.uid,true)}
  me={uid:u.uid,username:p.username,email:u.email,profilePic:p.profilePic,contacts:p.contacts||[],verified:u.emailVerified,pw:u.providerData.some(x=>x.providerId=="password")};start();if(!me.verified)say("Verify your email to post, comment and chat.")}
-function start(){$("auth").classList.add("hide");$("app").classList.remove("hide");ready=true;updVerify();nav("home");loadImages();if(!guest){startNotif()}}
+let headerLogoTimer;
+function syncHeaderLogo(){
+ clearTimeout(headerLogoTimer);
+ const logo=$("headerLogo"),username=!guest&&me?.username;
+ logo.classList.remove("fading");
+ if(!username){logo.textContent="ISHNTTCHAT";return}
+ let showingUsername=true;
+ logo.textContent=username;
+ const transition=()=>{
+  logo.classList.add("fading");
+  headerLogoTimer=setTimeout(()=>{
+   showingUsername=!showingUsername;
+   logo.textContent=showingUsername?username:"ISHNTTCHAT";
+   logo.classList.remove("fading");
+   headerLogoTimer=setTimeout(transition,5000)
+  },350)
+ };
+ headerLogoTimer=setTimeout(transition,5000)
+}
+function start(){$("auth").classList.add("hide");$("app").classList.remove("hide");syncHeaderLogo();ready=true;updVerify();nav("home");loadImages();if(!guest){startNotif()}}
 /* GALLERY */
 async function loadImages(){$("grid").innerHTML='<div class="sp" style="grid-column:1/-1"></div>';try{const r=await fetch(W+"/list");const j=await r.json();posts=(j.images||[]).filter(p=>!/__(dp|chat)__/.test(p.tags||p.caption||"")).sort((a,b)=>new Date(b.date)-new Date(a.date))}catch{if(!posts.length)$("grid").innerHTML='<div class="empty" style="grid-column:1/-1">Couldn\'t load posts. Check your connection and try again.</div>';return}renderGallery()}
 function filtered(){const q=$("q").value.trim().toLowerCase();if(!q)return posts;return posts.filter(p=>q[0]=="#"?(p.tags||"").toLowerCase().includes(q):[p.username,p.caption,p.tags].join(" ").toLowerCase().includes(q))}
