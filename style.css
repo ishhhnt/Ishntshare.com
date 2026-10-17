@@ -6,15 +6,16 @@ body{background:#141316 center/cover fixed;color:var(--t);font:15px/1.4 system-u
 button,input,textarea{font:inherit;color:inherit}
 .g{background:var(--gl);border:1px solid var(--bd);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3)}
 .hide{display:none!important}
-#app{height:100dvh;display:flex;flex-direction:column}
+#app{height:100vh;height:100dvh;min-height:0;display:flex;flex-direction:column}
 header{display:flex;gap:10px;align-items:center;margin:max(10px,env(safe-area-inset-top)) 12px 0;padding:8px 10px 8px 16px;border-radius:999px}
-.logo{font-weight:800;letter-spacing:.5px;white-space:nowrap}
+.logo{font-weight:800;letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .35s ease}
+.logo.fading{opacity:0}
 #q{flex:1;min-width:0;height:44px;border-radius:999px;border:1px solid var(--bd);background:var(--l);padding:0 16px;outline:0}
 #q:focus{border-color:var(--ac)}
 .ib{position:relative;width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:var(--l);cursor:pointer;display:grid;place-items:center;font-size:19px;flex:none}
 .ib:active,.btn:active{transform:scale(.95)}
 .dot{position:absolute;top:6px;right:6px;width:11px;height:11px;border-radius:50%;background:var(--rd);border:2px solid #222}
-main{flex:1;overflow:auto;padding:14px 12px 110px}
+main{flex:1 1 0%;min-height:0;min-width:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:14px 12px 110px}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:1050px){.grid{grid-template-columns:repeat(4,1fr)}}
@@ -243,7 +244,7 @@ nav button{border-radius:17px}
 nav button.plus{border-radius:18px}
 #panel{background:var(--gl);backdrop-filter:blur(32px) saturate(1.5);-webkit-backdrop-filter:blur(32px) saturate(1.5);box-shadow:-18px 0 50px rgba(0,0,0,.22)}
 .desktop-sidebar{display:none}
-.app-content{min-width:0;flex:1;display:flex;flex-direction:column}
+.app-content{min-width:0;min-height:0;flex:1;display:flex;flex-direction:column}
 .desktop-sidebar .desk-brand{
   display:flex;align-items:center;gap:11px;padding:10px 10px 28px;
   font-size:13px;font-weight:800;letter-spacing:.1em
@@ -300,10 +301,11 @@ main,#msgs,#panel{overscroll-behavior:contain}
 }
 @media(max-width:899px){
   #app{padding:10px 10px 0}
+  .app-content{min-height:0}
   header{margin:0 2px;min-height:64px;padding:8px 10px 8px 15px;gap:8px}
-  .logo{display:none}
+  .logo{display:block;flex:none;max-width:clamp(72px,24vw,140px);font-size:11px;letter-spacing:.08em}
   #q{font-size:16px;padding:0 13px}
-  main{padding:14px 2px 116px}
+  main{flex:1 1 0%;min-height:0;overflow-y:auto;overflow-x:hidden;padding:14px 2px 116px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
   .card,.p3 .card{border-radius:21px}
   nav{gap:2px;padding:6px}
