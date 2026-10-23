@@ -1,12 +1,16 @@
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
 import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,GoogleAuthProvider,signInWithPopup,signOut,sendEmailVerification,sendPasswordResetEmail,updatePassword,EmailAuthProvider,reauthenticateWithCredential}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-auth.js";
 import{getFirestore,doc,getDoc,setDoc,updateDoc,deleteDoc,collection,query,where,onSnapshot,addDoc,orderBy,limit,documentId,serverTimestamp,arrayUnion}from"https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+
 const app=initializeApp({apiKey:"AIzaSyCJkg8OOu3szJmBnvbbND6BJYT_9aQVExg",authDomain:"ishntt-f8b74.firebaseapp.com",projectId:"ishntt-f8b74",storageBucket:"ishntt-f8b74.firebasestorage.app",messagingSenderId:"1002308007099",appId:"1:1002308007099:web:ed0f89596a74f522bba59e"});
 const auth=getAuth(app),db=getFirestore(app),W="https://ishntbot.ishantgiri2004g.workers.dev";
+
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const cid=(a,b)=>[a,b].sort().join("_"),imgUrl=id=>W+"/image/"+id,ms=t=>t?.toMillis?t.toMillis():(t||Date.now());
+
 let me=null,guest=false,posts=[],mode="login",signing=false,ready=false,panelOpen=false,curChat=null,unsubMsgs=null;
 const profiles=new Map(),chats=new Map(),watching=new Set(),T0=Date.now();
+
 const seen=()=>JSON.parse(localStorage.getItem("seen_"+me.uid)||"{}"),setSeen=(id,t)=>{const s=seen();s[id]=t;localStorage.setItem("seen_"+me.uid,JSON.stringify(s))};
 const av=(n,p,c="")=>p?`<img class="av ${c}" src="${esc(p)}" alt="" data-l="${esc((n||"?")[0].toUpperCase())}" onerror="avErr(this)">`:`<span class="av ${c}">${esc((n||"?")[0].toUpperCase())}</span>`;
 let tt;function toast(html,fn){const t=$("toast");t.innerHTML=html;t.onclick=fn||null;t.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),3500)}
@@ -16,6 +20,7 @@ function errMsg(e){const c=e.code||"";return({"auth/invalid-credential":"Incorre
 function dlg(title,body,ok,onOk){const o=document.createElement("div");o.className="ov";o.innerHTML=`<div class="sheet g"><h3>${title}</h3>${body}<div class="row" style="justify-content:flex-end"><button class="btn" data-x>Cancel</button>${ok?`<button class="btn pri" data-ok>${ok}</button>`:""}</div></div>`;document.body.appendChild(o);const close=()=>o.remove();o.onclick=e=>{if(e.target===o||e.target.dataset.x!==undefined)close()};const b=o.querySelector("[data-ok]");if(b)b.onclick=()=>busy(b,async()=>{if(await onOk(o)!==false)close()});return o}
 async function getUserProfile(uid,force){if(!uid||uid.startsWith("g_"))return null;if(!force&&profiles.has(uid))return profiles.get(uid);try{const s=await getDoc(doc(db,"users",uid));const d=s.exists()?{uid,...s.data()}:null;profiles.set(uid,d);return d}catch{return profiles.get(uid)||null}}
 async function upload(file,extra){const f=new FormData();f.append("file",file);f.append("username",extra.username||me.username);f.append("uid",me.uid);f.append("caption",extra.caption||"");f.append("tags",extra.tags||"");const r=await fetch(W+"/upload",{method:"POST",body:f});if(!r.ok)throw Error("upload");return(await r.json()).id}
+
 /* AUTH */
 const setMode=m=>{mode=m;$("aForgot").classList.toggle("hide",m!="login");$("aUser").classList.toggle("hide",m!="sign");$("aGoT").textContent=m=="sign"?"Create account":"Log in";$("tLogin").classList.toggle("pri",m=="login");$("tSign").classList.toggle("pri",m=="sign");$("aErr").textContent=""};
 $("tLogin").onclick=()=>setMode("login");$("tSign").onclick=()=>setMode("sign");
@@ -57,8 +62,27 @@ function syncHeaderLogo(){
  headerLogoTimer=setTimeout(transition,5000)
 }
 function start(){$("auth").classList.add("hide");$("app").classList.remove("hide");syncHeaderLogo();ready=true;updVerify();nav("home");loadImages();if(!guest){startNotif()}}
+
 /* GALLERY */
-async function loadImages(){$("grid").innerHTML='<div class="sp" style="grid-column:1/-1"></div>';try{const r=await fetch(W+"/list");const j=await r.json();posts=(j.images||[]).filter(p=>!/__(dp|chat)__/.test(p.tags||p.caption||"")).sort((a,b)=>new Date(b.date)-new Date(a.date))}catch{if(!posts.length)$("grid").innerHTML='<div class="empty" style="grid-column:1/-1">Couldn\'t load posts. Check your connection and try again.</div>';return}renderGallery()}
+async function loadImages() {
+  const el = $("grid");
+  if (el) el.innerHTML = '<div class="sp" style="grid-column:1/-1"></div>';
+  
+  try {
+    const r = await fetch(W + "/list");
+    const j = await r.json();
+    posts = (j.images || [])
+      .filter(p => !/__(dp|chat)__/.test(p.tags || p.caption || ""))
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+  } catch (e) {
+    if (!posts.length && el) {
+      el.innerHTML = '<div class="empty" style="grid-column:1/-1">Couldn\'t load posts. Check connection.</div>';
+      return;
+    }
+  }
+  renderGallery();
+}
+
 function filtered(){const q=$("q").value.trim().toLowerCase();if(!q)return posts;return posts.filter(p=>q[0]=="#"?(p.tags||"").toLowerCase().includes(q):[p.username,p.caption,p.tags].join(" ").toLowerCase().includes(q))}
 function renderGallery(list=filtered(),el=$("grid")){el.innerHTML="";if(!list.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">Nothing here yet 🌙<br>Be the first to post!</div>';return}list.forEach(p=>el.appendChild(makeCard(p)))}
 function makeCard(p){const c=document.createElement("div");c.className="card g";c.innerHTML=`<img class="pic" loading="lazy" src="${imgUrl(p.id)}" alt=""><div class="meta"><span data-a>${av(p.username)}</span><b>${esc(p.username)}</b></div>`;c.onclick=()=>openPostView(p);getUserProfile(p.uid).then(u=>{if(u)c.querySelector("[data-a]").innerHTML=av(u.username,u.profilePic);if(u)c.querySelector("b").textContent=u.username});return c}
@@ -79,9 +103,20 @@ function openPostView(p){const own=!guest&&me.uid===p.uid;const o=document.creat
  if(own){$$("#de").onclick=e=>{if(!confirm("Delete this post?"))return;busy(e.target,async()=>{const r=await fetch(W+"/delete/"+p.id,{method:"DELETE"});if(!(await r.json()).success)throw Error();posts=posts.filter(x=>x.id!=p.id);o.remove();renderGallery();if(!$("profile").classList.contains("hide"))openProfile();say("Post deleted.")})};
  $$("#ed").onclick=()=>dlg("Edit post",`<input class="in" id="ec" value="${esc(p.caption)}" placeholder="Caption"><input class="in" id="et" value="${esc(p.tags)}" placeholder="#tags">`,"Save",async d=>{const caption=d.querySelector("#ec").value.trim(),tags=normTags(d.querySelector("#et").value);const r=await fetch(W+"/edit/"+p.id,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({caption,tags})});if(!(await r.json()).success)throw Error();p.caption=caption;p.tags=tags;$$("#cap").textContent=caption;$$("#tg").innerHTML=tags.split(" ").filter(Boolean).map(t=>`<span class="tag">${esc(t)}</span>`).join("");renderGallery()})}}
 const normTags=s=>s.split(/[\s,]+/).filter(Boolean).map(t=>t[0]=="#"?t:"#"+t).join(" ");
-function openUpload(){if(!canAct())return;const used=+localStorage.getItem("guestUploads")||0;if(guest&&used>=10){say("Guest limit (10 uploads) reached. Sign up to continue.");return}
- dlg("New post",`<input class="in" id="uf" type="file" accept="image/*"><input class="in" id="uc" placeholder="Write a caption"><input class="in" id="ut" placeholder="#anime #nature #cars">${guest?`<small style="color:var(--m)">Guest uploads: ${used}/10</small>`:""}`,"Upload",async d=>{const f=d.querySelector("#uf").files[0];if(!f){say("Choose an image first.");return false}if(f.size>15e6){say("Image must be under 15MB.");return false}
- await upload(f,{caption:d.querySelector("#uc").value.trim(),tags:normTags(d.querySelector("#ut").value)});if(guest)localStorage.setItem("guestUploads",used+1);say("Post uploaded ✓");await loadImages()})}
+
+function openUpload(){
+  if(guest){say("Guest mode: You can only view and download images. Log in to post.");return}
+  if(!canAct())return;
+  
+  dlg("New post",`<input class="in" id="uf" type="file" accept="image/*"><input class="in" id="uc" placeholder="Write a caption"><input class="in" id="ut" placeholder="#anime #nature #cars">`,"Upload",async d=>{
+    const f=d.querySelector("#uf").files[0];
+    if(!f){say("Choose an image first.");return false}
+    if(f.size>15e6){say("Image must be under 15MB.");return false}
+    await upload(f,{caption:d.querySelector("#uc").value.trim(),tags:normTags(d.querySelector("#ut").value)});
+    say("Post uploaded ✓");await loadImages();
+  })
+}
+
 /* PROFILE */
 async function openProfile(){const el=$("profile");
  if(guest){el.innerHTML=`<div class="card g" style="padding:20px;gap:12px;cursor:default;align-items:center;text-align:center">${av(me.username,"","l")}<h3>${esc(me.username)}</h3><div style="color:var(--m)">Guest mode — log in to use chat and profile.</div><button class="btn pri" id="gl">Login / Signup</button></div>`;$("gl").onclick=()=>{guest=false;me=null;ready=false;$("app").classList.add("hide");$("auth").classList.remove("hide")};return}
@@ -99,6 +134,7 @@ await updatePassword(u,b);say("Password changed!")}));
  $("cu").onclick=()=>dlg("Change username",`<input class="in" id="nn" placeholder="new username" autocapitalize="none"><div id="ne" style="color:var(--rd);font-size:13px"></div>`,"Change",async o=>{const n=o.querySelector("#nn").value.trim().toLowerCase(),er=o.querySelector("#ne");if(!okName(n)){er.textContent="3-20 characters: a-z, 0-9, _ .";return false}if(n==me.username)return;if(!(await nameFree(n))){er.textContent="That username is taken.";return false}
  await setDoc(doc(db,"usernames",n),{uid:me.uid,email:me.email||"",createdAt:serverTimestamp()});try{await deleteDoc(doc(db,"usernames",me.username))}catch{}await updateDoc(doc(db,"users",me.uid),{username:n});me.username=n;await getUserProfile(me.uid,true);say("Username updated ✓");openProfile()})}
 $("fDp").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f||guest||!canAct())return;say("Uploading photo…");try{const id=await upload(f,{caption:"__dp__",tags:"__dp__"});me.profilePic=imgUrl(id);await updateDoc(doc(db,"users",me.uid),{profilePic:me.profilePic});await getUserProfile(me.uid,true);say("Photo updated ✓");openProfile()}catch(x){say(errMsg(x))}};
+
 /* CHAT */
 function panelList(){curChat=null;unsubMsgs?.();$("panel").innerHTML=`<div class="ph"><b style="flex:1;font-size:18px">Chats</b><button class="ib" id="px" aria-label="Close">${IC.x}</button></div><div style="padding:10px"><input class="in" id="us" placeholder="Search users by username…" autocapitalize="none"></div><div id="ur" style="padding:0 10px"></div><div id="cl" style="flex:1;overflow:auto;padding:6px"></div>`;
  $("px").onclick=closePanel;let t;$("us").oninput=e=>{clearTimeout(t);t=setTimeout(()=>searchUsers(e.target.value.trim().toLowerCase()),300)};renderChatList()}
@@ -138,6 +174,7 @@ $("fChat").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)sendMsg
 function updVerify(){$("vb").classList.toggle("hide",guest||!me||me.verified!==false)}
 $("vRe").onclick=()=>busy($("vRe"),async()=>{await sendEmailVerification(auth.currentUser);mailSent("verify")});
 $("vOk").onclick=()=>busy($("vOk"),async()=>{await auth.currentUser.reload();me.verified=auth.currentUser.emailVerified;updVerify();say(me.verified?"Email verified ✓":"Not verified yet. Open the link in your email first.")});
+
 /* NAV */
 function nav(v){["Home","Search","Chat","Prof"].forEach(k=>$("n"+k).classList.remove("on"));$("home").classList.toggle("hide",v=="profile");$("profile").classList.toggle("hide",v!="profile");document.querySelectorAll(".desk-link").forEach(b=>b.classList.remove("active"));if(v=="profile"){$("nProf").classList.add("on");$("deskProf").classList.add("active");openProfile()}else{$("nHome").classList.add("on");$("deskHome").classList.add("active");if(v=="search"){$("nHome").classList.remove("on");$("nSearch").classList.add("on");$("deskHome").classList.remove("active");$("deskSearch").classList.add("active");$("main").scrollTop=0;$("q").focus()}}}
 $("nHome").onclick=()=>{$("q").value="";nav("home");renderGallery()};$("nSearch").onclick=()=>nav("search");$("nPost").onclick=openUpload;$("nChat").onclick=()=>{document.querySelectorAll(".desk-link").forEach(b=>b.classList.remove("active"));$("deskChat").classList.add("active");openPanel()};$("chatBtn").onclick=()=>$("nChat").click();$("nProf").onclick=()=>nav("profile");
