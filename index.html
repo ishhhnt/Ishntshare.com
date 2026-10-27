@@ -33,19 +33,21 @@
 </div>
 </div>
 <aside id="panel" class="g"></aside>
-<div id="auth"><button class="ib thb" style="position:fixed;top:max(12px,env(safe-area-inset-top));right:12px" title="Toggle theme" aria-label="Toggle theme"><svg class="ic"><use href="#i-sun"/></svg></button><div class="sheet g" style="gap:12px">
-<h2 style="font-size:26px">ISHNTTCHAT</h2><div style="color:var(--m)">Share. Chat. Connect.</div>
-<div class="row"><button class="btn pri" id="tLogin" style="flex:1">Login</button><button class="btn" id="tSign" style="flex:1">Signup</button></div>
-<input class="in hide" id="aUser" placeholder="Username (a-z, 0-9, _ .)" autocapitalize="none">
-<input class="in" id="aMail" type="email" placeholder="Email">
-<input class="in" id="aPass" type="password" placeholder="Password (min 6 characters)">
+<div id="auth"><div class="auth-backdrop" aria-hidden="true"><div class="auth-shot"></div><div class="auth-shot"></div><div class="auth-shot"></div></div><button class="ib thb auth-theme" title="Toggle theme" aria-label="Toggle theme"><svg class="ic"><use href="#i-sun"/></svg></button><div class="auth-layout"><section class="auth-story"><div class="auth-brand"><span class="brand-mark">I</span><span>ISHNTTCHAT</span></div><div class="auth-story-copy"><span class="auth-kicker">YOUR SPACE TO SHARE</span><h1>Little moments.<br><em>Big connections.</em></h1><p>A place to share what you love and find people who get it.</p></div><div class="auth-story-foot"><span class="auth-live-dot"></span> A community built around the things you share</div></section><section class="auth-form-wrap"><div class="sheet g auth-card">
+<div class="auth-card-head"><span class="auth-kicker">WELCOME TO ISHNTTCHAT</span><h2>Good to see you.</h2><p>Log in to pick up where you left off.</p></div>
+<div class="row auth-tabs"><button class="btn pri" id="tLogin" style="flex:1">Login</button><button class="btn" id="tSign" style="flex:1">Signup</button></div>
+<label class="auth-label hide" for="aUser">Username</label><input class="in hide" id="aUser" placeholder="Username (a-z, 0-9, _ .)" autocapitalize="none">
+<label class="auth-label" for="aMail">Email address</label><input class="in" id="aMail" type="email" placeholder="you@example.com" autocomplete="email">
+<label class="auth-label" for="aPass">Password</label><input class="in" id="aPass" type="password" placeholder="Enter your password" autocomplete="current-password">
 <div id="aErr" style="color:var(--rd);font-size:13px"></div>
 <button class="btn pri wide" id="aGo"><span id="aGoT">Log in</span><i><svg class="ic"><use href="#i-arrow"/></svg></i></button>
 <button class="lnk" id="aForgot">Forgot password?</button>
-<button class="btn" id="aGoogle"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 1 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg><span>Continue with Google</span></button>
+<div class="auth-divider"><span>or continue with</span></div>
+<button class="btn auth-google" id="aGoogle"><svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/><path fill="#FBBC05" d="M10.5 28.7a14.5 14.5 0 0 0 0-9.4l-7.9-6.1a24 24 0 0 0 0 21.6l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg><span>Continue with Google</span></button>
 <button class="btn" id="aSkip">Skip — guest mode (10 uploads)</button>
-</div></div>
+</div></section></div></div>
 <div id="toast" class="g"></div><div id="off" class="hide">You're offline</div>
 <input type="file" id="fDp" accept="image/*" class="hide"><input type="file" id="fChat" accept="image/*" class="hide">
 <script type="module" src="./app.js"></script><script type="module" src="./enhancements.js"></script>
 </body></html>
+
