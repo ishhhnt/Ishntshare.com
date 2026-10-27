@@ -81,7 +81,7 @@ nav button.plus{background:var(--ac);color:#201400;opacity:1;font-weight:800;fon
 @media(max-width:760px){
  #auth{padding:0;align-items:center;overflow-y:auto;overscroll-behavior:contain}
  .auth-backdrop::after{background:linear-gradient(180deg,rgba(10,9,15,.22),rgba(10,9,15,.58) 42%,rgba(10,9,15,.78)),linear-gradient(90deg,rgba(10,9,15,.18),transparent)}
- .auth-shot{inset:-18px;filter:blur(12px) brightness(.66)}.auth-shot.active{filter:blur(7px) brightness(.66)}
+auth-shot{inset:-12px;filter:blur(6px) brightness(.66)}.auth-shot.active{filter:blur(3.5px) brightness(.66)}
  .auth-layout{width:100%;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:72px 18px max(24px,env(safe-area-inset-bottom))}
  .auth-story{display:none}.auth-form-wrap{width:min(100%,420px);margin:auto 0}
  .auth-card{width:100%;max-height:calc(100dvh - 104px - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;padding:26px 22px 20px;gap:9px;border-radius:24px;background:rgba(19,18,24,.88);box-shadow:0 20px 60px rgba(0,0,0,.36)}
