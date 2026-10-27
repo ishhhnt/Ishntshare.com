@@ -33,7 +33,7 @@ let tt;function toast(html,fn){const t=$("toast");t.innerHTML=html;t.onclick=fn|
 const say=m=>toast(esc(m));
 async function busy(b,fn){b.classList.add("spin");try{return await fn()}catch(e){console.error(e);say(errMsg(e))}finally{b.classList.remove("spin")}}
 function errMsg(e){const c=e.code||"";return({"auth/invalid-credential":"Incorrect email or password.","auth/email-already-in-use":"This email is already registered.","auth/invalid-email":"Enter the email in a valid format.","auth/popup-closed-by-user":"Google sign-in was cancelled.","auth/user-not-found":"This email isn't registered.","auth/wrong-password":"Incorrect password.","auth/too-many-requests":"Too many attempts. Wait 5 minutes and try again.","auth/weak-password":"Choose a stronger password (min 6 characters).","auth/requires-recent-login":"Log in again and retry.","auth/network-request-failed":"Network error. Check your connection."})[c]||(navigator.onLine?"Something went wrong. Try again.":"You're offline.")}
-function dlg(title,body,ok,onOk){const o=document.createElement("div");o.className="ov";o.innerHTML=`<div class="sheet g"><h3>${title}</h3>${body}<div class="row" style="justify-content:flex-end"><button class="btn" data-x>Cancel</button>${ok?`<button class="btn pri" data-ok>${ok}</button>`:""}</div></div>`;document.body.appendChild(o);const close=()=>o.remove();o.onclick=e=>{if(e.target===o||e.target.dataset.x!==undefined)close()};const b=o.querySelector("[data-ok]");if(b)b.onclick=()=>busy(b,async()=>{if(await onOk(o)!==false)close()});return o}
+function dlg(title,body,ok,onOk){const o=document.createElement("div");o.className="ov";o.innerHTML=`<div class="sheet g"><h3>${title}</h3>${body}<div class="row" style="justify-content:flex-end"><button class="btn" data-x>Cancel</button>${ok?`<button class="btn pri" data-ok>${ok}</button>`:""}</div></div>`;document.body.appendChild(o);if(title==="Edit post"){o.querySelector("[data-ok]")?.setAttribute("aria-label","Save post changes")}const close=()=>o.remove();o.onclick=e=>{if(e.target===o||e.target.dataset.x!==undefined)close()};const b=o.querySelector("[data-ok]");if(b)b.onclick=()=>busy(b,async()=>{if(await onOk(o)!==false)close()});return o}
 async function getUserProfile(uid,force){if(!uid||uid.startsWith("g_"))return null;if(!force&&profiles.has(uid))return profiles.get(uid);try{const s=await getDoc(doc(db,"users",uid));const d=s.exists()?{uid,...s.data()}:null;profiles.set(uid,d);return d}catch{return profiles.get(uid)||null}}
 async function upload(file,extra){const f=new FormData();f.append("file",file);f.append("username",extra.username||me.username);f.append("uid",me.uid);f.append("caption",extra.caption||"");f.append("tags",extra.tags||"");const r=await fetch(W+"/upload",{method:"POST",body:f});if(!r.ok)throw Error("upload");return(await r.json()).id}
 
@@ -125,6 +125,10 @@ function makeCard(p){
   `;
   
   c.onclick = () => openPostView(p);
+  const image=c.querySelector(".pic");
+  const setRatio=()=>{if(image.naturalWidth&&image.naturalHeight)c.style.setProperty("--image-ratio",`${image.naturalWidth} / ${image.naturalHeight}`)};
+  image.addEventListener("load",setRatio,{once:true});
+  if(image.complete)setRatio();
   
   // Load User Profile for Avatar
   getUserProfile(p.uid).then(u => {
@@ -135,7 +139,7 @@ function makeCard(p){
   return c;
 }
 
-function fullView(p){const v=document.createElement("div");v.className="fv";v.innerHTML=`<img src="${imgUrl(p.id)}" alt=""><button class="ib" aria-label="Close">${IC.x}</button><div class="fvc"><b>${esc(p.username)}</b>${p.caption?`<span>${esc(p.caption)}</span>`:""}</div>`;v.onclick=()=>{v.classList.add("out");setTimeout(()=>v.remove(),180)};document.body.appendChild(v)}
+function fullView(p){const v=document.createElement("div");v.className="fv";v.innerHTML=`<img src="${imgUrl(p.id)}" alt=""><button class="ib" aria-label="Close">${IC.x}</button><div class="fvc"><b>${esc(p.username)}</b>${p.caption?`<span>${esc(p.caption)}</span>`:""}</div>`;v.onclick=()=>{v.classList.add("out");setTimeout(()=>v.remove(),180)};document.body.appendChild(v);v.querySelector("img").addEventListener("click",e=>e.stopPropagation())}
 function openPostView(p){const own=!guest&&me.uid===p.uid;const o=document.createElement("div");o.className="ov pv";
  const tags=(p.tags||"").split(/[\s,]+/).filter(Boolean).map(t=>`<span class="tag">${esc(t)}</span>`).join("");
  o.innerHTML=`<div class="sheet g pvs"><div class="grab"></div><div class="row"><span data-a>${av(p.username,"","m")}</span><div style="flex:1;min-width:0"><b>${esc(p.username)}</b>${p.date&&!isNaN(new Date(p.date))?`<small>${new Date(p.date).toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})}</small>`:""}</div><button class="ib" data-x aria-label="Close">${IC.x}</button></div><div class="pvi"><img class="big" src="${imgUrl(p.id)}" alt=""></div><div id="cap">${esc(p.caption)}</div><div id="tg">${tags}</div>
@@ -157,23 +161,39 @@ function openUpload(){
   if(guest){say("Guest mode: You can only view and download images. Log in to post.");return}
   if(!canAct())return;
   
-  dlg("New post",`<input class="in" id="uf" type="file" accept="image/*"><input class="in" id="uc" placeholder="Write a caption"><input class="in" id="ut" placeholder="#anime #nature #cars">`,"Upload",async d=>{
+  const dialog=dlg("Create a post",`<div class="post-composer"><label class="upload-drop" for="uf"><input class="in" id="uf" type="file" accept="image/*"><span class="upload-icon">${IC.plus}</span><b>Choose a photo</b><small>JPG, PNG or WEBP · up to 15 MB</small><img class="upload-preview hide" alt="Selected image preview"></label><label class="composer-label" for="uc">Caption</label><div class="tag-editor"><div class="tag-highlight" aria-hidden="true"></div><textarea class="in hashtag-input" id="uc" rows="3" placeholder="Write a caption... Add #hashtags"></textarea></div><label class="composer-label" for="ut">Topics</label><div class="tag-editor"><div class="tag-highlight" aria-hidden="true"></div><input class="in hashtag-input" id="ut" placeholder="#nature #art #travel"></div><small class="composer-hint">Hashtags are highlighted as you type.</small></div>`,`Share post`,async d=>{
     const f=d.querySelector("#uf").files[0];
     if(!f){say("Choose an image first.");return false}
     if(f.size>15e6){say("Image must be under 15MB.");return false}
     await upload(f,{caption:d.querySelector("#uc").value.trim(),tags:normTags(d.querySelector("#ut").value)});
     say("Post uploaded ✓");await loadImages();
-  })
+  });
+  setupHashtagFields(dialog);
+  const fileInput=dialog.querySelector("#uf"),preview=dialog.querySelector(".upload-preview"),drop=dialog.querySelector(".upload-drop");
+  fileInput.addEventListener("change",()=>{const file=fileInput.files[0];if(!file)return;preview.src=URL.createObjectURL(file);preview.classList.remove("hide");drop.classList.add("has-image");drop.querySelector("b").textContent=file.name;drop.querySelector("small").textContent="Tap to choose a different photo"});
 }
+
+function setupHashtagFields(root){
+ root.querySelectorAll(".hashtag-input").forEach(input=>{
+  const layer=input.parentElement.querySelector(".tag-highlight");
+  const paint=()=>{layer.innerHTML=esc(input.value).replace(/(^|\s)(#[\p{L}\p{N}_]+)/gu,'$1<span>$2</span>')+"\n";layer.scrollTop=input.scrollTop};
+  input.addEventListener("input",paint);input.addEventListener("scroll",()=>{layer.scrollTop=input.scrollTop;layer.scrollLeft=input.scrollLeft});paint();
+ });
+}
+
+document.addEventListener("click",event=>{
+ const button=event.target.closest("#ed");if(!button)return;
+ requestAnimationFrame(()=>{const modal=[...document.querySelectorAll(".ov")].at(-1);if(modal)setupHashtagFields(modal)})
+});
 
 /* PROFILE */
 async function openProfile(){const el=$("profile");
  if(guest){el.innerHTML=`<div class="card g" style="padding:20px;gap:12px;cursor:default;align-items:center;text-align:center">${av(me.username,"","l")}<h3>${esc(me.username)}</h3><div style="color:var(--m)">Guest mode — log in to use chat and profile.</div><button class="btn pri" id="gl">Login / Signup</button></div>`;$("gl").onclick=()=>{guest=false;me=null;ready=false;$("app").classList.add("hide");$("auth").classList.remove("hide")};return}
  const mine=posts.filter(p=>p.uid==me.uid);
- el.innerHTML=`<div class="card g" style="padding:20px;gap:14px;cursor:default"><div class="row">${av(me.username,me.profilePic,"l")}<div style="min-width:0"><h3>@${esc(me.username)}</h3><div style="color:var(--m);overflow:hidden;text-overflow:ellipsis">${esc(me.email)}</div></div></div>
+ el.innerHTML=`<div class="card g profile-card"><div class="row">${av(me.username,me.profilePic,"l")}<div style="min-width:0"><h3>@${esc(me.username)}</h3><div style="color:var(--m);overflow:hidden;text-overflow:ellipsis">${esc(me.email)}</div></div></div>
  <div class="stats"><div><b>${mine.length}</b><span>Posts</span></div><div><b>${chats.size}</b><span>Chats</span></div></div>
- <div class="row" style="flex-wrap:wrap"><button class="btn" id="cu">Change username</button><button class="btn" id="cp">Change photo</button>${me.pw?'<button class="btn" id="cw">Change password</button>':""}</div><button class="btn pri wide" id="lo"><span>Logout</span><i>${IC.out}</i></button></div>
- <h3 style="margin:18px 4px 10px">My posts</h3><div class="grid p3" id="mg"></div>`;
+ <div class="profile-actions"><button class="btn" id="cu">Change username</button><button class="btn" id="cp">Change photo</button>${me.pw?'<button class="btn" id="cw">Change password</button>':""}</div><button class="btn pri wide" id="lo"><span>Logout</span><i>${IC.out}</i></button></div>
+ <h3 class="profile-heading">My posts <span>${mine.length}</span></h3><div class="grid p3" id="mg"></div>`;
  renderGallery(mine,$("mg"));
  $("lo").onclick=async()=>{await signOut(auth);me=null;watching.clear();chats.clear();$("panel").classList.remove("open")};
  $("cp").onclick=()=>$("fDp").click();
