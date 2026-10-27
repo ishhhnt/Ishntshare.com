@@ -7,6 +7,22 @@ const auth=getAuth(app),db=getFirestore(app),W="https://ishntbot.ishantgiri2004g
 
 const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const cid=(a,b)=>[a,b].sort().join("_"),imgUrl=id=>W+"/image/"+id,ms=t=>t?.toMillis?t.toMillis():(t||Date.now());
+let authSlides=[],authSlideIndex=0,authSlideTimer=null;
+
+function setAuthSlides(items){
+ const shots=[...document.querySelectorAll(".auth-shot")];
+ if(!shots.length||!items?.length)return;
+ authSlides=items.slice(0,Math.max(shots.length,12)).map(p=>imgUrl(p.id));
+ shots.forEach((shot,index)=>{shot.style.backgroundImage=`url("${authSlides[index%authSlides.length]}")`;shot.classList.toggle("active",index===0)});
+ authSlideIndex=0;clearInterval(authSlideTimer);
+ if(authSlides.length<2)return;
+ authSlideTimer=setInterval(()=>{
+  const current=authSlideIndex%shots.length,next=(current+1)%shots.length;
+  authSlideIndex=(authSlideIndex+1)%authSlides.length;
+  shots[next].style.backgroundImage=`url("${authSlides[authSlideIndex]}")`;
+  shots[next].classList.add("active");shots[current].classList.remove("active");
+ },1500);
+}
 
 let me=null,guest=false,posts=[],mode="login",signing=false,ready=false,panelOpen=false,curChat=null,unsubMsgs=null;
 const profiles=new Map(),chats=new Map(),watching=new Set(),T0=Date.now();
@@ -38,7 +54,7 @@ $("aSkip").onclick=()=>{let g=localStorage.getItem("guestId");if(!g){g="g_"+Math
 $("aForgot").onclick=()=>dlg("Reset password",`<input class="in" id="fe" type="email" placeholder="Your account email" value="${esc($("aMail").value.trim())}">`,"Send link",async o=>{const e=o.querySelector("#fe").value.trim();if(!e){say("Enter your email.");return false}await sendPasswordResetEmail(auth,e);mailSent("reset")});
 function mailSent(k){const v=k=="verify";dlg(v?"📧 Verification email sent!":"📧 Password reset email sent!",`<div>From: <b>noreply@ishntt-f8b74.firebaseapp.com</b></div><div>Check your Inbox and your <b>Spam</b> folder.</div><div style="color:var(--m)">${v?"After tapping the link, press “I’ve verified” in the banner or refresh the page.":"Open the link, set a new password, then log in."}</div>`,"Got it",()=>{})}
 const canAct=()=>{if(guest||me?.verified)return true;say("Verify your email first. Use Resend in the banner.");return false};
-onAuthStateChanged(auth,u=>{if(signing)return;if(u)init(u);else if(!guest){ready=false;syncHeaderLogo();$("auth").classList.remove("hide");$("app").classList.add("hide")}});
+onAuthStateChanged(auth,u=>{if(signing)return;if(u)init(u);else if(!guest){ready=false;syncHeaderLogo();$("auth").classList.remove("hide");$("app").classList.add("hide");loadImages()}});
 async function init(u){guest=false;try{await u.reload()}catch{}let p=await getUserProfile(u.uid,true);
  if(!p){await new Promise(res=>{const d=dlg("Choose a username",`<input class="in" id="nn" placeholder="username" autocapitalize="none"><div id="ne" style="color:var(--rd);font-size:13px"></div>`,"Save",async o=>{const n=o.querySelector("#nn").value.trim().toLowerCase();if(!okName(n)){o.querySelector("#ne").textContent="3-20 characters: a-z, 0-9, _ .";return false}if(!(await nameFree(n))){o.querySelector("#ne").textContent="That username is taken.";return false}await makeProfile(u,n,u.photoURL);res()});d.onclick=null;d.querySelector("[data-x]").remove()});p=await getUserProfile(u.uid,true)}
  me={uid:u.uid,username:p.username,email:u.email,profilePic:p.profilePic,contacts:p.contacts||[],verified:u.emailVerified,pw:u.providerData.some(x=>x.providerId=="password")};start();if(!me.verified)say("Verify your email to post, comment and chat.")}
@@ -63,7 +79,9 @@ function syncHeaderLogo(){
 }
 function start(){$("auth").classList.add("hide");$("app").classList.remove("hide");syncHeaderLogo();ready=true;updVerify();nav("home");loadImages();if(!guest){startNotif()}}
 
-/* GALLERY */
+/* ==========================================
+   GALLERY (SIRF IMAGES, NO TEXT POSTS)
+   ========================================== */
 async function loadImages() {
   const el = $("grid");
   if (el) el.innerHTML = '<div class="sp" style="grid-column:1/-1"></div>';
@@ -71,9 +89,13 @@ async function loadImages() {
   try {
     const r = await fetch(W + "/list");
     const j = await r.json();
+    
+    // Filter out text-only posts by checking if 'id' exists and is not empty
     posts = (j.images || [])
-      .filter(p => !/__(dp|chat)__/.test(p.tags || p.caption || ""))
+      .filter(p => p.id && p.id.toString().trim() !== "" && !/__(dp|chat)__/.test(p.tags || p.caption || ""))
       .sort((a, b) => new Date(b.date) - new Date(a.date));
+    setAuthSlides(posts);
+      
   } catch (e) {
     if (!posts.length && el) {
       el.innerHTML = '<div class="empty" style="grid-column:1/-1">Couldn\'t load posts. Check connection.</div>';
@@ -85,7 +107,34 @@ async function loadImages() {
 
 function filtered(){const q=$("q").value.trim().toLowerCase();if(!q)return posts;return posts.filter(p=>q[0]=="#"?(p.tags||"").toLowerCase().includes(q):[p.username,p.caption,p.tags].join(" ").toLowerCase().includes(q))}
 function renderGallery(list=filtered(),el=$("grid")){el.innerHTML="";if(!list.length){el.innerHTML='<div class="empty" style="grid-column:1/-1">Nothing here yet 🌙<br>Be the first to post!</div>';return}list.forEach(p=>el.appendChild(makeCard(p)))}
-function makeCard(p){const c=document.createElement("div");c.className="card g";c.innerHTML=`<img class="pic" loading="lazy" src="${imgUrl(p.id)}" alt=""><div class="meta"><span data-a>${av(p.username)}</span><b>${esc(p.username)}</b></div>`;c.onclick=()=>openPostView(p);getUserProfile(p.uid).then(u=>{if(u)c.querySelector("[data-a]").innerHTML=av(u.username,u.profilePic);if(u)c.querySelector("b").textContent=u.username});return c}
+
+function makeCard(p){
+  // Safety check: Do not render if no image ID
+  if (!p.id) return document.createElement("div"); 
+
+  const c = document.createElement("div");
+  c.className = "card g";
+  
+  // Image Tag
+  c.innerHTML = `
+    <img class="pic" loading="lazy" src="${imgUrl(p.id)}" alt="">
+    <div class="meta">
+      <span data-a>${av(p.username)}</span>
+      <b>${esc(p.username)}</b>
+    </div>
+  `;
+  
+  c.onclick = () => openPostView(p);
+  
+  // Load User Profile for Avatar
+  getUserProfile(p.uid).then(u => {
+    if(u) c.querySelector("[data-a]").innerHTML = av(u.username, u.profilePic);
+    if(u) c.querySelector("b").textContent = u.username;
+  });
+  
+  return c;
+}
+
 function fullView(p){const v=document.createElement("div");v.className="fv";v.innerHTML=`<img src="${imgUrl(p.id)}" alt=""><button class="ib" aria-label="Close">${IC.x}</button><div class="fvc"><b>${esc(p.username)}</b>${p.caption?`<span>${esc(p.caption)}</span>`:""}</div>`;v.onclick=()=>{v.classList.add("out");setTimeout(()=>v.remove(),180)};document.body.appendChild(v)}
 function openPostView(p){const own=!guest&&me.uid===p.uid;const o=document.createElement("div");o.className="ov pv";
  const tags=(p.tags||"").split(/[\s,]+/).filter(Boolean).map(t=>`<span class="tag">${esc(t)}</span>`).join("");
